@@ -57,7 +57,7 @@ class Launcher {
     PowerShell(script);
     using(var key=Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run"))key.SetValue("VimakaWindowsCare","\""+exe+"\" --background");
     using(var key=Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\VimakaWindowsCare")){
-     key.SetValue("DisplayName","Vimaka Windows Care");key.SetValue("DisplayVersion","0.1.10");key.SetValue("Publisher","Vimaka Sistemas Inteligentes");
+     key.SetValue("DisplayName","Vimaka Windows Care");key.SetValue("DisplayVersion","0.1.11");key.SetValue("Publisher","Vimaka Sistemas Inteligentes");
      key.SetValue("InstallLocation",AppDir);key.SetValue("DisplayIcon",exe);
      key.SetValue("UninstallString","powershell.exe -NoProfile -ExecutionPolicy Bypass -File \""+Path.Combine(AppDir,"native","Uninstall.ps1")+"\"");
     }
@@ -75,7 +75,7 @@ class Launcher {
     if(File.Exists(edge))Process.Start(new ProcessStartInfo(edge,"--app="+Url){UseShellExecute=true});
     else Process.Start(new ProcessStartInfo(Url){UseShellExecute=true});
   }
-  if(Replaced)File.WriteAllText(Path.Combine(Root,"last-install.txt"),"0.1.10 OK "+DateTime.UtcNow.ToString("o")+"\nPrevious version: "+Backup);
+  if(Replaced)File.WriteAllText(Path.Combine(Root,"last-install.txt"),"0.1.11 OK "+DateTime.UtcNow.ToString("o")+"\nPrevious version: "+Backup);
   return 0;
  }catch(Exception e){if(Backup!=null){try{if(Directory.Exists(AppDir))InstallSupport.Move(AppDir,Path.Combine(Root,"failed-"+Guid.NewGuid().ToString("N")));InstallSupport.Move(Backup,AppDir);}catch(Exception rollback){e=new Exception(e.Message+"\nRollback: "+rollback.Message);}}File.WriteAllText(Path.Combine(Path.GetTempPath(),"Vimaka-install-error.txt"),e.ToString());MessageBox.Show(e.Message,"Vimaka Windows Care",MessageBoxButtons.OK,MessageBoxIcon.Warning);return 1;}}
 }

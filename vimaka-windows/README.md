@@ -1,10 +1,10 @@
-# Vimaka Windows Care 0.1.10
+# Vimaka Windows Care 0.1.11
 
 Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo do Windows. Versao de avaliacao; nao e uma garantia de ganho de desempenho .
 
 ## Instalar e abrir
 
-Execute `build/VimakaWindowsCare-Setup-0.1.10.exe`. O nome inclui automaticamente a versao de `package.json` nas proximas compilacoes. Instala por usuario em `%LOCALAPPDATA%\VimakaWindowsCare\app`, cria atalhos na area de trabalho/menu Iniciar e registra inicializacao automatica do componente local, sem elevacao. Nenhum tuning ou reparo e executado na instalacao.
+Execute `build/VimakaWindowsCare-Setup-0.1.11.exe`. O nome inclui automaticamente a versao de `package.json` nas proximas compilacoes. Instala por usuario em `%LOCALAPPDATA%\VimakaWindowsCare\app`, cria atalhos na area de trabalho/menu Iniciar e registra inicializacao automatica do componente local, sem elevacao. Nenhum tuning ou reparo e executado na instalacao.
 
 O executavel abre uma janela do Edge em `http://127.0.0.1:47831`. A interface tambem pode ser instalada como PWA pelo navegador. A PWA precisa do componente local para diagnosticar e executar ferramentas; o cache offline inclui apenas a interface, nunca os diagnosticos. O instalador e o launcher desta versao nao possuem assinatura digital de distribuicao. Nao contorne bloqueios de seguranca do Windows; para distribuicao ampla, assine e valide os binarios em maquinas limpas.
 
@@ -111,3 +111,7 @@ A seção Geekbench fica visível nessa página, com referências em barras, ins
 Diagnóstico e melhoria geram dashboards separados e visíveis na visão geral. O painel da melhoria apresenta barras antes/depois para CPU, memória e arquivo, variação percentual, memória livre, inicialização e etapas incompletas. Ao encerrar uma operação iniciada nessa janela, a interface leva ao respectivo resultado. Relatório HTML geral inclui os dois painéis.
 
 As leituras da última melhoria ficam em performanceReport, separadas de diagnosticReport e de testes avulsos posteriores. Não mistura medições de execuções diferentes nem preenche falhas com dados antigos. Geekbench permanece uma base de referência em sua própria escala; não é possível obter posição Geekbench a partir das métricas do microteste local.
+
+## Gráficos de ocupação (0.1.11)
+
+Gráficos de rosca exibem memória e ocupação de cada unidade, com percentual central e legendas em GB para usado/livre. Usam as últimas leituras do diagnóstico, não monitoramento em tempo real. SVG local, sem dependências externas, com rótulo acessível e valores textuais. Leituras inválidas não geram percentuais artificiais.

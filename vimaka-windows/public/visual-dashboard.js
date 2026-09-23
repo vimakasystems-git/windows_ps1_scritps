@@ -1,3 +1,4 @@
+import {usageChart} from './usage-chart.js';
 import {t,locale} from './i18n.js';
 const $=id=>document.getElementById(id);
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -21,8 +22,8 @@ export function renderVisual(state){
   $('health-icon').textContent=m.restartPending||low?'!':'✓';
   $('health-card').classList.toggle('attention',!!m.restartPending||low);
   $('last-reading').textContent=t('Última leitura')+': '+new Date(m.at).toLocaleString(locale());
-  $('visual-metrics').innerHTML=`<article class="metric-card"><span>${t('Memória em uso')}</span><strong>${num(m.totalGB-m.freeGB)} <small>/ ${num(m.totalGB)} GB</small></strong><progress max="${m.totalGB}" value="${m.totalGB-m.freeGB}"></progress><p>${t('Varia conforme os aplicativos abertos.')}</p></article><article class="metric-card"><span>${t('Ao ligar o computador')}</span><strong>${m.startup?.length||0} <small>${t('aplicativos')}</small></strong><p>${t('Revise a inicialização nas ferramentas.')}</p></article><article class="metric-card"><span>${t('Seu computador')}</span><strong class="model-name">${esc(m.model)}</strong><p>${esc(m.os)}</p></article>`;
-  $('drive-cards').innerHTML=drives.map(d=>`<article class="drive-card"><div><strong>${esc(d.name)}</strong><span>${num(d.freeGB)} GB ${t('livres')}</span></div><progress max="${d.totalGB}" value="${d.totalGB-d.freeGB}"></progress><p>${num(d.totalGB-d.freeGB)} / ${num(d.totalGB)} GB ${t('utilizados')}</p></article>`).join('')||t('Nenhuma unidade disponível.');
+  $('visual-metrics').innerHTML=`<article class="metric-card"><span>${t('Memória em uso')}</span><strong>${num(m.totalGB-m.freeGB)} <small>/ ${num(m.totalGB)} GB</small></strong>${usageChart(m.totalGB,m.freeGB)}<p>${t('Varia conforme os aplicativos abertos.')}</p></article><article class="metric-card"><span>${t('Ao ligar o computador')}</span><strong>${m.startup?.length||0} <small>${t('aplicativos')}</small></strong><p>${t('Revise a inicialização nas ferramentas.')}</p></article><article class="metric-card"><span>${t('Seu computador')}</span><strong class="model-name">${esc(m.model)}</strong><p>${esc(m.os)}</p></article>`;
+  $('drive-cards').innerHTML=drives.map(d=>`<article class="drive-card"><div><strong>${esc(d.name)}</strong><span>${num(d.freeGB)} GB ${t('livres')}</span></div>${usageChart(d.totalGB,d.freeGB)}<p>${num(d.totalGB-d.freeGB)} / ${num(d.totalGB)} GB ${t('utilizados')}</p></article>`).join('')||t('Nenhuma unidade disponível.');
  }
  current=state.storage;job=state.jobs?.find(j=>j.kind==='storage'&&j.status==='running');
  $('storage-scan').disabled=state.jobs?.some(j=>j.status==='running');$('storage-cancel').hidden=!job;
