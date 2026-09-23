@@ -10,3 +10,7 @@ LEIA-ME-Tuning.md
 Repair-Tuning.ps1
 .env
 .env.*
+vimaka-windows/build/
+vimaka-windows/build-*/
+vimaka-windows/data/
+*.result.json
