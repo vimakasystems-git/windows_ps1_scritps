@@ -72,7 +72,7 @@ jobs:
       - if: matrix.os == 'linux'
         name: Install DEB and test bundled runtime
         run: |
-          sudo dpkg -i dist/*.deb
+          sudo apt-get install -y ./dist/*.deb
           VIMAKA_TEST_APP_DIR=/opt/vimaka-workstation-care /opt/vimaka-workstation-care/node --test app/tests/portable.test.mjs
           docker run --rm -v "$PWD/dist:/packages:ro" -v "$PWD/app/tests:/tests:ro" fedora:latest sh -c 'dnf install -y /packages/*.rpm && VIMAKA_TEST_APP_DIR=/opt/vimaka-workstation-care /opt/vimaka-workstation-care/node --test /tests/portable.test.mjs'
       - if: matrix.os == 'macos'
