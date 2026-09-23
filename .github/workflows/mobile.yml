@@ -63,8 +63,12 @@ jobs:
           for family in ['iPhone','iPad']:
               print(next(d['udid'] for d in devices if family in d['name']))
           PY
+          xcrun simctl shutdown all
           while read -r device; do
-            xcodebuild test -project platforms/ios/VimakaCareMobile.xcodeproj -scheme VimakaCareMobile -destination "platform=iOS Simulator,id=$device" -derivedDataPath platforms/ios/build CODE_SIGNING_ALLOWED=NO > ios-test.log 2>&1 || { tail -n 120 ios-test.log; exit 1; }
+            xcrun simctl boot "$device"
+            xcrun simctl bootstatus "$device" -b
+            xcodebuild test -project platforms/ios/VimakaCareMobile.xcodeproj -scheme VimakaCareMobile -destination "platform=iOS Simulator,id=$device" -derivedDataPath platforms/ios/build -parallel-testing-enabled NO -test-timeouts-enabled YES -maximum-test-execution-time-allowance 90 CODE_SIGNING_ALLOWED=NO > ios-test.log 2>&1 || { tail -n 120 ios-test.log; exit 1; }
+            xcrun simctl shutdown "$device"
           done < selected.txt
       - name: Package simulator app
         run: |
