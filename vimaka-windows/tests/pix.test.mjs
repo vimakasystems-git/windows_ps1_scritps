@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {crc16,buildPixPayload} from '../pix.mjs';
+test('Pix aceita email confirmado e rejeita email incompleto',()=>{
+  const payload=buildPixPayload({key:'vimakasystems@gmail.com',name:'Douglas Cardoso',city:'São Paulo'});
+  assert.ok(payload.includes('0123vimakasystems@gmail.com'));
+  assert.equal(payload.slice(-4),crc16(payload.slice(0,-4)));
+  for(const key of ['vimaka@','vimaka @gmail.com','11945546072'])assert.throws(()=>buildPixPayload({key,name:'Teste',city:'SP'}));
+});
 test('CRC16 confere com o exemplo oficial do Banco Central',()=>{
   const sample='00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304';
   assert.equal(crc16(sample),'1D3D');

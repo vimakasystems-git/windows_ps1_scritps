@@ -18,7 +18,7 @@ function merchantText(value,max){
   return normalized;
 }
 export function buildPixPayload({key,name,city}){
-  if(typeof key!=='string'||!/^\+55\d{11}$/.test(key))throw Error('Use a chave celular confirmada no formato +55DDDNÚMERO.');
+  if(typeof key!=='string'||(!/^\+55\d{11}$/.test(key)&&!(/^[a-z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+$/.test(key)&&key.length<=77)))throw Error('Use uma chave Pix confirmada: celular +55 ou e-mail em letras minusculas.');
   const payload=field('00','01')+field('26',field('00','br.gov.bcb.pix')+field('01',key))+field('52','0000')+field('53','986')+field('58','BR')+field('59',merchantText(name,25))+field('60',merchantText(city,15))+field('62',field('05','***'))+'6304';
   return payload+crc16(payload);
 }

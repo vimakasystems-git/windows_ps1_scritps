@@ -10,7 +10,7 @@ byId('copy-pix-key').onclick=()=>{if(donation)copy(donation.key);};
 async function load(){try{
   const response=await fetch('/donation.json');if(!response.ok)throw Error('Dados do Pix indisponíveis.');
   donation=await response.json();
-  if(typeof donation.payload!=='string'||!donation.payload.startsWith('000201')||!/^\+55\d{11}$/.test(donation.key))throw Error('Dados do Pix inválidos.');
+  if(typeof donation.payload!=='string'||!donation.payload.startsWith('000201')||donation.key!=='vimakasystems@gmail.com')throw Error('Dados do Pix inválidos.');
   byId('donation-name').textContent=donation.name;byId('donation-city').textContent=donation.city+' · Brasil';
   byId('donation-key').textContent=donation.key;byId('pix-payload').value=donation.payload;
   byId('copy-pix').disabled=false;byId('copy-pix-key').disabled=false;

@@ -1,4 +1,4 @@
-# Vimaka Windows Care 0.1.2
+# Vimaka Windows Care 0.1.3
 
 Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo e laboratorio Windows Sandbox. Versao de avaliacao; nao e uma garantia de ganho de desempenho nem uma plataforma universal para executar qualquer programa Windows.
 
@@ -60,12 +60,17 @@ As categorias foram escolhidas a partir dos guias de problemas recorrentes da Mi
 
 ## Apoie o desenvolvedor
 
-A pagina de apoio oferece QR Code Pix de valor livre, Copia e Cola, copia da chave e download do QR. Recebedor informado: Douglas Cardoso, Sao Paulo; chave celular +5511945546072. O pagador escolhe o valor e confere o recebedor no aplicativo do banco. O app nao processa nem confirma pagamentos.
+A pagina de apoio oferece QR Code Pix de valor livre, Copia e Cola, copia da chave e download do QR. Recebedor informado: Douglas Cardoso, Sao Paulo; chave e-mail vimakasystems@gmail.com. O pagador escolhe o valor e confere o recebedor no aplicativo do banco. O app nao processa nem confirma pagamentos.
 
 O QR e gerado localmente, sem API externa. Para regenerar depois de instalar as dependencias de desenvolvimento:
 
 ```powershell
-node generate-donation.mjs '+5511945546072' 'Douglas Cardoso' 'São Paulo'
+node generate-donation.mjs 'vimakasystems@gmail.com' 'Douglas Cardoso' 'São Paulo'
 ```
 
 Os testes verificam o CRC com exemplo do Banco Central, ausencia de valor fixo e decodificacao do PNG para o mesmo payload. Isso nao valida o cadastro da chave em um banco. As dependencias npm servem apenas para geracao e testes; o instalador usa os arquivos prontos.
+## Idiomas e contato
+
+Interface em portugues (Brasil), ingles e espanhol. Use o seletor de idioma no topo; a preferencia fica salva no navegador. Sem preferencia salva, usa o idioma do navegador quando suportado, senao portugues. Textos de interface, ferramentas, confirmacoes e relatorio acompanham a escolha. Comandos, entradas do usuario, evidencias e logs nativos preservam o idioma original. As mensagens do instalador/launcher seguem o idioma do Windows (pt/en/es); mensagens nativas do sistema e logs nao sao traduzidos.
+
+O rodape inclui encomendas de software Windows pelo WhatsApp +55 11 94554-6072 (https://wa.me/5511945546072) e https://vimaka.com. O contato abre externamente; nenhuma mensagem e enviada automaticamente.

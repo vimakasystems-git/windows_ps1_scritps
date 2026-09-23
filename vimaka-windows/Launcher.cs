@@ -9,21 +9,22 @@ using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 class Launcher {
+ static string Text(string pt,string en,string es){string lang=System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;return lang=="en"?en:lang=="es"?es:pt;}
  static string Root=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"VimakaWindowsCare");
  static string AppDir=Path.Combine(Root,"app");
  static string Url="http://127.0.0.1:47831/";
  static bool Online(){try{var r=(HttpWebRequest)WebRequest.Create(Url+"api/session");r.Timeout=1200;using(var response=r.GetResponse())using(var reader=new StreamReader(response.GetResponseStream()))return reader.ReadToEnd().Contains("\"local\":true");}catch{return false;}}
  static string Quote(string s){return "'"+s.Replace("'","''")+"'";}
- static void PowerShell(string code){var p=new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),"System32\\WindowsPowerShell\\v1.0\\powershell.exe"),"-NoProfile -NonInteractive -EncodedCommand "+Convert.ToBase64String(Encoding.Unicode.GetBytes(code)));p.UseShellExecute=false;p.CreateNoWindow=true;using(var process=Process.Start(p)){process.WaitForExit();if(process.ExitCode!=0)throw new Exception("Falha ao criar os atalhos.");}}
+ static void PowerShell(string code){var p=new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),"System32\\WindowsPowerShell\\v1.0\\powershell.exe"),"-NoProfile -NonInteractive -EncodedCommand "+Convert.ToBase64String(Encoding.Unicode.GetBytes(code)));p.UseShellExecute=false;p.CreateNoWindow=true;using(var process=Process.Start(p)){process.WaitForExit();if(process.ExitCode!=0)throw new Exception(Text("Falha ao criar os atalhos.","Failed to create shortcuts.","No se pudieron crear los accesos directos."));}}
  [STAThread] static int Main(string[] args){try{
   bool background=Array.IndexOf(args,"--background")>=0;
   using(var payload=Assembly.GetExecutingAssembly().GetManifestResourceStream("payload.zip")){
    if(payload!=null){
-    if(Online())throw new Exception("Feche o componente local antes de instalar ou atualizar. O instalador nao substitui arquivos de uma instancia em execucao.");
+    if(Online())throw new Exception(Text("Feche o componente local antes de instalar ou atualizar. O instalador nao substitui arquivos de uma instancia em execucao.","Stop the local component before installing or updating. The installer does not replace files while the app is running.","Detenga el componente local antes de instalar o actualizar. El instalador no sustituye archivos mientras la aplicacion esta en ejecucion."));
     Directory.CreateDirectory(AppDir);
     using(var zip=new ZipArchive(payload,ZipArchiveMode.Read))foreach(var e in zip.Entries){
       string target=Path.GetFullPath(Path.Combine(AppDir,e.FullName));
-      if(!target.StartsWith(Path.GetFullPath(AppDir)+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new Exception("Caminho invalido no pacote.");
+      if(!target.StartsWith(Path.GetFullPath(AppDir)+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new Exception(Text("Caminho invalido no pacote.","Invalid path in package.","Ruta no valida en el paquete."));
       if(e.FullName.EndsWith("/")){Directory.CreateDirectory(target);continue;}
       Directory.CreateDirectory(Path.GetDirectoryName(target));e.ExtractToFile(target,true);
     }
@@ -34,7 +35,7 @@ class Launcher {
     PowerShell(script);
     using(var key=Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run"))key.SetValue("VimakaWindowsCare","\""+exe+"\" --background");
     using(var key=Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\VimakaWindowsCare")){
-     key.SetValue("DisplayName","Vimaka Windows Care");key.SetValue("DisplayVersion","0.1.2");key.SetValue("Publisher","Vimaka Sistemas Inteligentes");
+     key.SetValue("DisplayName","Vimaka Windows Care");key.SetValue("DisplayVersion","0.1.3");key.SetValue("Publisher","Vimaka Sistemas Inteligentes");
      key.SetValue("InstallLocation",AppDir);key.SetValue("DisplayIcon",exe);
      key.SetValue("UninstallString","powershell.exe -NoProfile -ExecutionPolicy Bypass -File \""+Path.Combine(AppDir,"native","Uninstall.ps1")+"\"");
     }
@@ -42,10 +43,10 @@ class Launcher {
   }
   if(!Online()){
     string node=Path.Combine(AppDir,"node.exe"),server=Path.Combine(AppDir,"server.mjs");
-    if(!File.Exists(node)||!File.Exists(server))throw new Exception("Instalacao nao encontrada. Execute VimakaWindowsCare-Setup.exe.");
+    if(!File.Exists(node)||!File.Exists(server))throw new Exception(Text("Instalacao nao encontrada. Execute VimakaWindowsCare-Setup.exe.","Installation not found. Run VimakaWindowsCare-Setup.exe.","Instalacion no encontrada. Ejecute VimakaWindowsCare-Setup.exe."));
     var info=new ProcessStartInfo(node,"\""+server+"\"");info.WorkingDirectory=AppDir;info.UseShellExecute=false;info.CreateNoWindow=true;Process.Start(info);
     bool ready=false;for(int i=0;i<30;i++){Thread.Sleep(400);if(Online()){ready=true;break;}}
-    if(!ready)throw new Exception("O componente local nao iniciou. Verifique se a porta 47831 esta em uso.");
+    if(!ready)throw new Exception(Text("O componente local nao iniciou. Verifique se a porta 47831 esta em uso.","The local component did not start. Check whether port 47831 is in use.","El componente local no se inicio. Compruebe si el puerto 47831 esta en uso."));
   }
   if(!background){
     string edge=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),"Microsoft\\Edge\\Application\\msedge.exe");
