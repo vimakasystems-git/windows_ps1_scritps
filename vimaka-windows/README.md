@@ -1,4 +1,4 @@
-# Vimaka Windows Care 0.1.1
+# Vimaka Windows Care 0.1.2
 
 Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo e laboratorio Windows Sandbox. Versao de avaliacao; nao e uma garantia de ganho de desempenho nem uma plataforma universal para executar qualquer programa Windows.
 
@@ -13,6 +13,7 @@ Requer Windows x64, .NET Framework 4.x e Edge ou outro navegador moderno. O paco
 ## Desenvolvimento e build
 
 ```powershell
+npm ci --ignore-scripts
 node server.mjs
 node --test tests/*.test.mjs
 .\build.ps1
@@ -56,3 +57,15 @@ Use Aplicativos instalados no Windows ou execute `native/Uninstall.ps1` da pasta
 - https://learn.microsoft.com/en-us/windows/package-manager/winget/download
 
 As categorias foram escolhidas a partir dos guias de problemas recorrentes da Microsoft, nao de um ranking estatistico de frequencia.
+
+## Apoie o desenvolvedor
+
+A pagina de apoio oferece QR Code Pix de valor livre, Copia e Cola, copia da chave e download do QR. Recebedor informado: Douglas Cardoso, Sao Paulo; chave celular +5511945546072. O pagador escolhe o valor e confere o recebedor no aplicativo do banco. O app nao processa nem confirma pagamentos.
+
+O QR e gerado localmente, sem API externa. Para regenerar depois de instalar as dependencias de desenvolvimento:
+
+```powershell
+node generate-donation.mjs '+5511945546072' 'Douglas Cardoso' 'São Paulo'
+```
+
+Os testes verificam o CRC com exemplo do Banco Central, ausencia de valor fixo e decodificacao do PNG para o mesmo payload. Isso nao valida o cadastro da chave em um banco. As dependencias npm servem apenas para geracao e testes; o instalador usa os arquivos prontos.

@@ -1,0 +1,10 @@
+import fs from 'node:fs/promises';
+import QRCode from 'qrcode';
+import {fileURLToPath} from 'node:url';
+import {buildPixPayload} from './pix.mjs';
+const [key,name,city]=process.argv.slice(2);
+const payload=buildPixPayload({key,name,city});
+const root=new URL('./public/',import.meta.url);
+await QRCode.toFile(fileURLToPath(new URL('donation-qr.png',root)),payload,{type:'png',width:420,margin:4,errorCorrectionLevel:'M',color:{dark:'#000000',light:'#FFFFFF'}});
+await fs.writeFile(new URL('donation.json',root),JSON.stringify({key,name,city,payload,amount:null},null,2)+'\n');
+console.log('QR Code e Pix Copia e Cola gerados localmente, sem valor fixado.');

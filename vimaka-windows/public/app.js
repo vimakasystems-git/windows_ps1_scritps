@@ -1,10 +1,11 @@
+import './donation.js';
 const $=id=>document.getElementById(id);
 let csrf='',state={},draft=null,installPrompt=null;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const format=n=>Number.isFinite(Number(n))?Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2}):'Não medido';
 function notice(text,error=false){$('notice').textContent=text;$('notice').classList.toggle('error',error);}
 async function api(route,data){const r=await fetch('/api/'+route,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json','X-Vimaka-Token':csrf},body:JSON.stringify(data)});const value=await r.json();if(!r.ok)throw Error(value.error||'Falha de conexão');return value;}
-const pageNames={overview:'Visão geral',tools:'Diagnóstico e reparos',sandbox:'Laboratório Windows',cerebro:'Cérebro Brasil',ecosystem:'Ecossistema Vimaka',history:'Histórico'};
+const pageNames={overview:'Visão geral',tools:'Diagnóstico e reparos',sandbox:'Laboratório Windows',cerebro:'Cérebro Brasil',ecosystem:'Ecossistema Vimaka',history:'Histórico',donation:'Apoie o desenvolvedor'};
 function showPage(name){if(!Object.hasOwn(pageNames,name))return;document.querySelectorAll('.page').forEach(x=>x.hidden=x.id!==name);document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===name));$('breadcrumb').textContent='Meu computador / '+pageNames[name];location.hash=name;}
 document.querySelectorAll('[data-page],[data-go]').forEach(b=>b.onclick=()=>showPage(b.dataset.page||b.dataset.go));
 function confirmAction(title,detail,admin=false){$('confirm-title').textContent=title;$('confirm-detail').textContent=detail;$('confirm-admin').textContent=admin?'O Windows solicitará autorização de administrador.':'A execução ficará registrada no histórico local.';const d=$('confirm');d.returnValue='cancel';d.showModal();return new Promise(resolve=>d.addEventListener('close',()=>resolve(d.returnValue==='ok'),{once:true}));}
