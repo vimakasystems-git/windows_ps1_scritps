@@ -11,7 +11,7 @@ if($needsAdmin -and !$isAdmin){
   $p=Start-Process "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe" -ArgumentList $arguments -Verb RunAs -WindowStyle Hidden -Wait -PassThru
   if(!(Test-Path -LiteralPath $ResultFile)){throw 'Nenhum resultado da acao elevada.'}
   exit $p.ExitCode
- }catch{$result.error=$_.Exception.Message;$result | ConvertTo-Json | Set-Content -LiteralPath $ResultFile -Encoding UTF8;exit 1}
+ }catch{$result.error='Esta acao exige autorizacao de administrador. Se nao possui login e senha de uma conta administradora, procure o administrador da maquina. / Administrator approval is required. If you do not have administrator credentials, contact your administrator. / Se requiere autorizacion de administrador. Si no tiene credenciales, contacte al administrador. Detalhes: '+$_.Exception.Message;$result | ConvertTo-Json | Set-Content -LiteralPath $ResultFile -Encoding UTF8;exit 1}
 }
 function Native($exe,[string[]]$arguments){$text=(& $exe @arguments 2>&1 | Out-String);if($LASTEXITCODE -ne 0){throw ($text+' Codigo: '+$LASTEXITCODE)};$text}
 try{

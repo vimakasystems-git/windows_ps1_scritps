@@ -132,7 +132,7 @@ Fale com a Vimaka sobre seu projeto.|Talk to Vimaka about your project.|Hable co
 Encerrar componente local|Stop local component|Detener componente local
 Cancelar|Cancel|Cancelar
 Confirmar execução|Confirm execution|Confirmar ejecución
-O Windows solicitará autorização de administrador.|Windows will request administrator approval.|Windows solicitará autorización de administrador.
+Esta ação exige administrador. O Windows solicitará autorização ou login de uma conta administradora. Se você não possui essas credenciais, cancele e procure o administrador da máquina.|This action requires administrator access. Windows will request approval or an administrator account login. If you do not have these credentials, cancel and contact your administrator.|Esta acción requiere acceso de administrador. Windows solicitará autorización o las credenciales de una cuenta administradora. Si no las tiene, cancele y contacte al administrador.
 A execução ficará registrada no histórico local.|Execution will be recorded in local history.|La ejecución se registrará en el historial local.
 INICIALIZAÇÃO|STARTUP|INICIO
 entradas|entries|entradas

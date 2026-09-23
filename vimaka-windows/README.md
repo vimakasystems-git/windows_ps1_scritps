@@ -1,4 +1,4 @@
-# Vimaka Windows Care 0.1.4
+# Vimaka Windows Care 0.1.5
 
 Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo do Windows. Versao de avaliacao; nao e uma garantia de ganho de desempenho .
 
@@ -19,7 +19,7 @@ node --test tests/*.test.mjs
 .\build.ps1
 ```
 
-O build requer Node.js assinado ja instalado, Windows PowerShell 5.1 e o compilador .NET Framework. Dados reais nunca entram no instalador. Para atualizar, use Encerrar componente local no rodape e gere uma nova pasta build. `-NodePath` seleciona um runtime assinado e `-BuildDirectory build-release` preserva um build anterior. O build desta sessao usa Node.js 24.21.0 LTS obtido do site oficial, com SHA-256 conferido e assinatura Authenticode valida.
+O build requer Node.js assinado ja instalado, Windows PowerShell 5.1 e o compilador .NET Framework. Dados reais nunca entram no instalador. Para atualizar, execute o novo instalador. Ele verifica os requisitos, informa o plano de instalacao, solicita o encerramento seguro do componente e substitui os arquivos antigos. Se houver uma operacao em andamento, aguarda sua conclusao pelo usuario. Gere uma nova pasta build ao compilar. `-NodePath` seleciona um runtime assinado e `-BuildDirectory build-release` preserva um build anterior. O build desta sessao usa Node.js 24.21.0 LTS obtido do site oficial, com SHA-256 conferido e assinatura Authenticode valida.
 
 ## Comparacao e ferramentas
 
@@ -31,7 +31,7 @@ Ferramentas: diagnostico de rede, DISM CheckHealth, DISM RestoreHealth seguido d
 
 Abre o site em uma janela propria para consultar orientacoes. O aplicativo nao le conversas privadas nem importa ou executa comandos do chat. Use as ferramentas fixas de diagnostico e reparo apos revisar sua descricao.
 
-O laboratorio, a execucao de scripts e o download de pacotes foram retirados deste produto na versao 0.1.4. Historicos e arquivos anteriores sao preservados; o recurso opcional Windows Sandbox ja habilitado no sistema nao e alterado por esta atualizacao.
+O laboratorio, a execucao de scripts e o download de pacotes foram retirados deste produto na versao 0.1.5. Historicos e arquivos anteriores sao preservados; o recurso opcional Windows Sandbox ja habilitado no sistema nao e alterado por esta atualizacao.
 
 ## Seguranca e privacidade
 
@@ -69,3 +69,14 @@ Os testes verificam o CRC com exemplo do Banco Central, ausencia de valor fixo e
 Interface em portugues (Brasil), ingles e espanhol. Use o seletor de idioma no topo; a preferencia fica salva no navegador. Sem preferencia salva, usa o idioma do navegador quando suportado, senao portugues. Textos de interface, ferramentas, confirmacoes e relatorio acompanham a escolha. Comandos, entradas do usuario, evidencias e logs nativos preservam o idioma original. As mensagens do instalador/launcher seguem o idioma do Windows (pt/en/es); mensagens nativas do sistema e logs nao sao traduzidos.
 
 O rodape inclui encomendas de software Windows pelo WhatsApp +55 11 94554-6072 (https://wa.me/5511945546072) e https://vimaka.com. O contato abre externamente; nenhuma mensagem e enviada automaticamente.
+## Atualizacao e requisitos (0.1.5)
+
+O instalador extrai o pacote em uma pasta temporaria, verifica Windows x64/PowerShell 5.1, testa o Node incluido e verifica navegador compativel. Mostra o que sera instalado e por que. Se faltar navegador, oferece instalar Edge pelo catalogo oficial da Microsoft, verificando SHA-256 e Authenticode antes de chamar o instalador. Essa dependencia exige autorizacao do administrador. Falhas de download, cancelamento ou requisitos incompativeis interrompem a atualizacao.
+
+Windows PowerShell e .NET Framework sao componentes do Windows suportado; se estiverem ausentes ou danificados, e necessario reparar o Windows com o administrador. O executavel nao consegue inicializar sem .NET Framework. Nao ha instalacao automatica de componentes do sistema danificados.
+
+Nao encerra processos a forca nem interrompe reparos. A pasta app anterior e movida para previous-ID em %LOCALAPPDATA%\VimakaWindowsCare; os dados ficam intactos. Arquivos obsoletos deixam de fazer parte da instalacao ativa. O registro e os atalhos sao atualizados. Se a troca falhar, tenta restaurar a pasta anterior. Backups permanecem para recuperacao. O resumo fica em last-install.txt e erros em %TEMP%\Vimaka-install-error.txt.
+
+O app instala por usuario, sem elevacao. DISM, SFC e limpeza DNS pedem permissao atraves do UAC do Windows. O app explica previamente que uma conta administradora e necessaria. Sem credenciais, o usuario deve cancelar e procurar o administrador. Senhas nunca sao pedidas ou guardadas pelo app.
+
+Validacao local: atualizacao com componente em execucao e preservacao de comparison.json/history.json. Nao validado em conta padrao separada nem em maquina sem navegador; esses cenarios precisam de teste em Windows limpo antes de distribuicao ampla.

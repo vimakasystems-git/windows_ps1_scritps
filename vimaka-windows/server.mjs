@@ -46,7 +46,7 @@ const server=http.createServer(async(req,res)=>{
     if(req.headers.origin && req.headers.origin!==origin)return send(res,403,{error:'Origem não autorizada.'});
     if(req.headers['sec-fetch-site']==='cross-site')return send(res,403,{error:'Acesso externo não permitido.'});
     const url=new URL(req.url,origin);
-    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.1.4',local:true});
+    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.1.5',local:true});
     if(url.pathname.startsWith('/api/')&&req.method!=='GET'){
       if(req.headers.origin!==origin||req.headers['x-vimaka-token']!==csrf||!req.headers['content-type']?.startsWith('application/json'))return send(res,403,{error:'Sessão local inválida. Reabra o aplicativo.'});
     }

@@ -11,15 +11,15 @@ if($signature.Status -ne 'Valid'){throw 'O runtime Node local precisa ter assina
 foreach($name in @('server.mjs','core.mjs','package.json','public','native','README.md','THIRD-PARTY-NOTICES.txt')){Copy-Item -LiteralPath (Join-Path $project $name) -Destination $payload -Recurse}
 Copy-Item -LiteralPath $node -Destination (Join-Path $payload 'node.exe')
 $csc=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-$refs=@('/reference:System.Windows.Forms.dll','/reference:System.IO.Compression.dll','/reference:System.IO.Compression.FileSystem.dll')
+$refs=@('/reference:System.Windows.Forms.dll','/reference:System.IO.Compression.dll','/reference:System.IO.Compression.FileSystem.dll','/reference:System.Web.Extensions.dll')
 $launcher=Join-Path $payload 'VimakaWindowsCare.exe'
-& $csc /nologo /target:winexe @refs "/win32icon:$(Join-Path $project 'public\app.ico')" "/out:$launcher" (Join-Path $project 'Launcher.cs')
+& $csc /nologo /target:winexe @refs "/win32icon:$(Join-Path $project 'public\app.ico')" "/out:$launcher" (Join-Path $project 'Launcher.cs') (Join-Path $project 'InstallSupport.cs')
 if($LASTEXITCODE -ne 0){throw 'Compilacao do launcher falhou.'}
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $zip=Join-Path $build 'payload.zip'
 [IO.Compression.ZipFile]::CreateFromDirectory($payload,$zip,[IO.Compression.CompressionLevel]::Optimal,$false)
 $setup=Join-Path $build 'VimakaWindowsCare-Setup.exe'
-& $csc /nologo /target:winexe @refs "/win32icon:$(Join-Path $project 'public\app.ico')" "/resource:$zip,payload.zip" "/out:$setup" (Join-Path $project 'Launcher.cs')
+& $csc /nologo /target:winexe @refs "/win32icon:$(Join-Path $project 'public\app.ico')" "/resource:$zip,payload.zip" "/out:$setup" (Join-Path $project 'Launcher.cs') (Join-Path $project 'InstallSupport.cs')
 if($LASTEXITCODE -ne 0){throw 'Compilacao do instalador falhou.'}
 Get-FileHash $setup -Algorithm SHA256 | Format-List
 Write-Host 'Instalador gerado:' $setup

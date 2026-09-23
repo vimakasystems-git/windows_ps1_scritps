@@ -1,4 +1,4 @@
-const CACHE='vimaka-care-shell-v5';
+const CACHE='vimaka-care-shell-v6';
 const SHELL=['/','/style.css','/app.js','/vimaka-logo.png','/icon-192.png','/icon-512.png','/solutions.json','/manifest.webmanifest'];
 SHELL.push('/i18n.js','/translations.js','/donation.js','/donation.json','/donation-qr.png','/fonts.css',...Array.from({length:9},(_,i)=>`/fonts/font-${i+1}.ttf`));
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
