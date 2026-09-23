@@ -1,5 +1,8 @@
 // Application copy only. Commands, diagnostic evidence and user input stay original.
 export const rows = `
+Prévia: diagnóstico, benchmark e espaço em disco. Reparos automáticos não disponíveis.|Preview: diagnostics, benchmark and disk space. Automated repairs unavailable.|Vista previa: diagnóstico, benchmark y espacio en disco. Reparaciones automáticas no disponibles.
+Inventário parcial de inicialização|Partial startup inventory|Inventario parcial de inicio
+Não medido|Not measured|No medido
 Resultado do diagnóstico|Diagnosis results|Resultados del diagnóstico
 Diagnóstico com etapas incompletas. Consulte o histórico.|Diagnosis has incomplete steps. See history.|El diagnóstico tiene pasos incompletos. Consulta el historial.
 Diagnóstico concluído. Estas são as medições do seu PC.|Diagnosis completed. These are your PC measurements.|Diagnóstico completado. Estas son las mediciones de tu PC.

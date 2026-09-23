@@ -14,14 +14,25 @@ function showPage(name){if(!Object.hasOwn(pageNames,name))name='overview';docume
 document.querySelectorAll('[data-page],[data-go]').forEach(b=>b.onclick=()=>showPage(b.dataset.page||b.dataset.go));
 function confirmAction(title,detail,admin=false){$('confirm-title').textContent=title;$('confirm-detail').textContent=detail;$('confirm-admin').textContent=admin?'Esta ação exige administrador. O Windows solicitará autorização ou login de uma conta administradora. Se você não possui essas credenciais, cancele e procure o administrador da máquina.':'A execução ficará registrada no histórico local.';const d=$('confirm');d.returnValue='cancel';d.showModal();return new Promise(resolve=>d.addEventListener('close',()=>resolve(d.returnValue==='ok'),{once:true}));}
 function render(){
+ if(state.platform&&state.platform!=='win32'){
+  document.title='Vimaka '+state.systemName+' Care';
+  document.querySelector('.product-name').textContent=state.systemName.toUpperCase()+' CARE';
+  $('os-heading').textContent=state.systemName.toUpperCase();
+  $('tools-description').textContent=t('Prévia: diagnóstico, benchmark e espaço em disco. Reparos automáticos não disponíveis.');
+  $('windows-tools-note').hidden=true;
+  $('optimize').hidden=true;$('performance-result').hidden=true;
+  $('platform-note').hidden=false;$('platform-note').textContent='Vimaka '+state.systemName+' Care · '+t('Prévia: diagnóstico, benchmark e espaço em disco. Reparos automáticos não disponíveis.');
+ }
+
  const finished=state.jobs?.find(j=>j.id===watchedJob&&j.status!=='running');
  if(finished){watchedJob=null;showPage(finished.mode==='benchmark'?'benchmark':'overview');notice('Execução encerrada. Veja o dashboard de resultados.');requestAnimationFrame(()=>document.getElementById(finished.mode==='performance'?'performance-result':finished.mode==='diagnostic'?'diagnosis-result':'benchmark')?.scrollIntoView({behavior:'smooth',block:'start'}));}
 
  renderDashboard(state);renderVisual(state);renderResultsDashboard(state);
  const before=state.comparison?.before,current=state.comparison?.current;
  if(current){
-  $('stats').innerHTML=[['INICIALIZAÇÃO',`${current.startup.length} entradas`,'Programas registrados para iniciar com o Windows'],['MEMÓRIA LIVRE',`${format(current.freeGB)} GB`,`de ${format(current.totalGB)} GB · varia com os aplicativos abertos`],['FERRAMENTAS',Object.keys(state.actions||{}).length,'Diagnóstico e reparos disponíveis neste aplicativo']].map(([a,b,c])=>`<article class="stat"><small>${a}</small><strong>${esc(b)}</strong><p>${esc(c)}</p></article>`).join('');
-  const rows=[['Entradas de inicialização',before?.startup?.length,current.startup.length],['Memória livre (GB)',format(before?.freeGB),format(current.freeGB)],['Serviços Remojo',before?.remojo??'Não medido',current.remojo],['Plano de energia',before?.power||'Não registrado',current.power||'Não registrado']];
+  $('stats').innerHTML=[['INICIALIZAÇÃO',`${current.startup.length} entradas`,state.platform==='win32'?'Programas registrados para iniciar com o Windows':t('Inventário parcial de inicialização')],['MEMÓRIA LIVRE',`${format(current.freeGB)} GB`,`de ${format(current.totalGB)} GB · varia com os aplicativos abertos`],['FERRAMENTAS',Object.keys(state.actions||{}).length,'Diagnóstico e reparos disponíveis neste aplicativo']].map(([a,b,c])=>`<article class="stat"><small>${a}</small><strong>${esc(b)}</strong><p>${esc(c)}</p></article>`).join('');
+  let rows=[['Entradas de inicialização',before?.startup?.length,current.startup.length],['Memória livre (GB)',format(before?.freeGB),format(current.freeGB)],['Serviços Remojo',before?.remojo??'Não medido',current.remojo],['Plano de energia',before?.power||'Não registrado',current.power||'Não registrado']];
+  if(state.platform!=='win32')rows=rows.slice(0,2);
   $('comparison').innerHTML=`<table><thead><tr><th>INDICADOR</th><th>ANTES</th><th>AGORA</th></tr></thead><tbody>${rows.map(r=>`<tr>${r.map(v=>`<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="footnote">Referência: ${esc(before?.at)}<br>Leitura atual: ${esc(current.at)}</p>${state.comparison?.notes?`<p class="footnote" translate="no">${esc(state.comparison.notes)}</p>`:''}`;
   const low=(current.drives||[]).filter(d=>d.totalGB>=4&&d.freeGB<15);
   const ethernet=(current.network||[]).find(n=>n.Name==='Ethernet'&&n.Status==='Up');

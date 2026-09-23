@@ -46,13 +46,13 @@ export function renderDashboard(state){
  }
  const machine=state.comparison?.current;
  if(machine){
-  const rows=[['Sistema',machine.os],['Modelo',[machine.manufacturer,machine.model].filter(Boolean).join(' ')],['Processador',(machine.cpu||[]).map(x=>x.Name).join(', ')],['Memória instalada',number(machine.totalGB)+' GB'],['GPU',(machine.gpu||[]).map(x=>x.Name).join(', ')],['Discos',(machine.disks||[]).map(x=>`${x.Model} (${number(x.sizeGB)} GB)`).join(', ')],['Reinício pendente',machine.restartPending?'Sim':'Não']];
+  const rows=[['Sistema',machine.os],['Modelo',[machine.manufacturer,machine.model].filter(Boolean).join(' ')],['Processador',(machine.cpu||[]).map(x=>x.Name).join(', ')],['Memória instalada',number(machine.totalGB)+' GB'],['GPU',(machine.gpu||[]).map(x=>x.Name).join(', ')],['Discos',(machine.disks||[]).map(x=>`${x.Model} (${number(x.sizeGB)} GB)`).join(', ')],['Reinício pendente',machine.restartPending==null?'Não medido':machine.restartPending?'Sim':'Não']];
   $('hardware-summary').innerHTML=`<table>${rows.map(([key,value])=>`<tr><th>${t(key)}</th><td>${escape(value||'—')}</td></tr>`).join('')}</table>`;
   $('hardware-full').textContent=JSON.stringify(machine,null,2);
  }
  const before=state.comparison?.benchmarkBefore,after=state.comparison?.benchmarkAfter;
  if(after){
-  const comparable=before?.protocol===after.protocol&&before?.runtime===after.runtime;
+  const comparable=before?.protocol===after.protocol&&before?.runtime===after.runtime&&before?.platform===after.platform&&before?.arch===after.arch;
   const fields=[['CPU SHA-256 (MiB/s)','cpuSha256MiBs'],['Cópia de memória (MiB/s)','memoryCopyMiBs'],['Gravação de arquivo (MiB/s)','fileWriteMiBs'],['Leitura com cache (MiB/s)','cachedFileReadMiBs']];
   $('benchmark-cards').innerHTML=fields.slice(0,3).map(([label,key])=>`<article class="metric-card"><span>${t(label)}</span><strong>${number(after[key])}</strong><p>${t('Última medição local')}</p></article>`).join('');
   $('benchmark-results').innerHTML=`<table><thead><tr><th>${t('Métrica')}</th><th>${t('Antes')}</th><th>${t('Agora')}</th><th>${t('Variação medida')}</th></tr></thead><tbody>${fields.map(([label,key])=>`<tr><th>${t(label)}</th><td>${number(before?.[key])}</td><td>${number(after[key])}</td><td>${comparable&&before[key]>0?number((after[key]/before[key]-1)*100)+'%':'—'}</td></tr>`).join('')}</tbody></table><p class="footnote">${t('Microteste local; não representa desempenho geral nem é comparável ao Geekbench.')} ${escape(after.protocol)} · ${escape(after.runtime)} · ${escape(after.at)}</p>`;

@@ -1,3 +1,4 @@
+import {isWindows,systemName,dataDirectory,portableActions,portableSnapshot,portableStorage,portableNetwork} from './platform.mjs';
 import {recordReport} from './report-state.mjs';
 import {scanStorage} from './storage.mjs';
 import http from 'node:http';
@@ -7,16 +8,18 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {actions,safeAction} from './core.mjs';
+import {actions as windowsActions,safeAction as windowsSafeAction} from './core.mjs';
+const actions=isWindows?windowsActions:portableActions;
+function safeAction(id){if(isWindows)return windowsSafeAction(id);if(!Object.hasOwn(actions,id))throw Error('Action unavailable on this OS.');return actions[id];}
 import {benchmark} from './benchmark.mjs';
 import {makeSteps,executeSteps} from './workflow.mjs';
 const here=path.dirname(fileURLToPath(import.meta.url));
-const data=process.env.VIMAKA_DATA || path.join(process.env.LOCALAPPDATA||os.homedir(),'VimakaWindowsCare','data');
+const data=process.env.VIMAKA_DATA || dataDirectory();
 const port=Number(process.env.VIMAKA_PORT||47831), origin=`http://127.0.0.1:${port}`;
 const ps=path.join(process.env.WINDIR||'C:\\Windows','System32','WindowsPowerShell','v1.0','powershell.exe');
 await fs.mkdir(data,{recursive:true});
 let storageInfo;
-async function getStorageInfo(){storageInfo??=JSON.parse((await runPS('StorageInfo.ps1',[],undefined,30000)).replace(/^\uFEFF/,''));return storageInfo;}
+async function getStorageInfo(){if(!isWindows)return portableStorage();storageInfo??=JSON.parse((await runPS('StorageInfo.ps1',[],undefined,30000)).replace(/^\uFEFF/,''));return storageInfo;}
 const jobs=new Map(), csrf=crypto.randomBytes(32).toString('hex');
 const jsonRead=async(file,fallback)=>{try{return JSON.parse((await fs.readFile(file,'utf8')).replace(/^\uFEFF/,''));}catch{return fallback;}};
 async function persist(){await fs.writeFile(path.join(data,'history.json'),JSON.stringify([...jobs.values()].slice(-100),null,2));}
@@ -39,12 +42,13 @@ function newJob(title,work){
 async function body(req){let s='';for await(const chunk of req){s+=chunk;if(s.length>120000)throw Error('Dados acima do limite.');}return JSON.parse(s||'{}');}
 function send(res,status,value){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(value));}
 async function snapshot(job){
-  const result=JSON.parse((await runPS('Collect.ps1',[],job,90000)).replace(/^\uFEFF/,''));
+  const result=isWindows?JSON.parse((await runPS('Collect.ps1',[],job,90000)).replace(/^\uFEFF/,'')):await portableSnapshot();
   const state=await jsonRead(path.join(data,'comparison.json'),{});
   state.before??=result;state.current=result;
   await fs.writeFile(path.join(data,'comparison.json'),JSON.stringify(state,null,2));return result;
 }
 async function executeAction(id,job){
+ if(!isWindows){safeAction(id);job.log=portableNetwork();return;}
  const action=safeAction(id);const file=path.join(data,crypto.randomUUID()+'.result.json');
  const prefix=job.log+'\n--- '+action.name+' ---\n';job.log=prefix;
  const timer=setInterval(async()=>{try{const text=await fs.readFile(file+'.progress.log','utf8');job.log=(prefix+text).slice(-150000);}catch{}},750);
@@ -54,6 +58,7 @@ async function executeAction(id,job){
  job.log=(prefix+(result.output||'')).slice(-150000);if(!result.ok)throw Error(result.error||'Ação falhou.');if(failure)throw failure;
 }
 function workflow(mode){
+ if(!isWindows&&mode==='performance')throw Error('Automated tuning is currently Windows-only. Use diagnostics or benchmark.');
  const steps=makeSteps(mode);
  return newJob(mode==='performance'?'Melhorar desempenho':mode==='benchmark'?'Benchmark local':'Diagnóstico completo',async job=>{
   job.steps=steps;job.progress=0;job.mode=mode;
@@ -84,12 +89,12 @@ const server=http.createServer(async(req,res)=>{
     if(req.headers.origin && req.headers.origin!==origin)return send(res,403,{error:'Origem não autorizada.'});
     if(req.headers['sec-fetch-site']==='cross-site')return send(res,403,{error:'Acesso externo não permitido.'});
     const url=new URL(req.url,origin);
-    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.1.11',local:true});
+    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.2.0',local:true,platform:process.platform,systemName});
     if(url.pathname.startsWith('/api/')&&req.method!=='GET'){
       if(req.headers.origin!==origin||req.headers['x-vimaka-token']!==csrf||!req.headers['content-type']?.startsWith('application/json'))return send(res,403,{error:'Sessão local inválida. Reabra o aplicativo.'});
     }
     if(req.method==='GET'&&url.pathname==='/api/state'){
-      return send(res,200,{comparison:await jsonRead(path.join(data,'comparison.json'),{}),storage:await jsonRead(path.join(data,'storage.json'),null),actions,jobs:[...jobs.values()].reverse().slice(0,100)});
+      return send(res,200,{comparison:await jsonRead(path.join(data,'comparison.json'),{}),platform:process.platform,systemName,storage:await jsonRead(path.join(data,'storage.json'),null),actions,jobs:[...jobs.values()].reverse().slice(0,100)});
     }
 
     if(req.method==='GET'&&url.pathname==='/api/storage/options'){const info=await getStorageInfo();return send(res,200,{roots:[{id:'profile',label:'Meus arquivos'},...info.roots]});}
@@ -107,7 +112,7 @@ const server=http.createServer(async(req,res)=>{
       }));
     }
     if(req.method==='POST'&&url.pathname==='/api/open-cerebro'){
-      await runPS('Open-Cerebro.ps1');return send(res,200,{opened:true});
+      if(isWindows)await runPS('Open-Cerebro.ps1');else await processRun(process.platform==='darwin'?'/usr/bin/open':'xdg-open',['https://cerebrobrasil.com.br'],undefined,10000);return send(res,200,{opened:true});
     }
     if(req.method==='POST'&&url.pathname==='/api/shutdown'){
       const b=await body(req);if(b.confirm!==true||[...jobs.values()].some(j=>j.status==='running'))throw Error('Conclua as operações antes de encerrar.');
@@ -116,6 +121,7 @@ const server=http.createServer(async(req,res)=>{
     if(req.method!=='GET')return send(res,404,{error:'Rota inexistente.'});
     if(url.pathname.startsWith('/api/'))return send(res,404,{error:'Rota inexistente.'});
     const rel=url.pathname==='/'?'index.html':decodeURIComponent(url.pathname.slice(1));
+    if(rel.includes('\\'))return send(res,403,{error:'Caminho inválido.'});
     const root=path.join(here,'public'),file=path.resolve(root,rel);
     if(!file.startsWith(root+path.sep))return send(res,403,{error:'Caminho inválido.'});
     const content=await fs.readFile(file).catch(()=>null);if(!content)return send(res,404,{error:'Arquivo inexistente.'});

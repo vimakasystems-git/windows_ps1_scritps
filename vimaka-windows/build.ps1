@@ -10,7 +10,7 @@ New-Item $payload -ItemType Directory -Force | Out-Null
 $node=if($NodePath){$NodePath}else{(Get-Command node.exe -ErrorAction Stop).Source}
 $signature=Get-AuthenticodeSignature $node
 if($signature.Status -ne 'Valid'){throw 'O runtime Node local precisa ter assinatura Authenticode valida.'}
-foreach($name in @('server.mjs','core.mjs','workflow.mjs','benchmark.mjs','storage.mjs','report-state.mjs','package.json','public','native','README.md','THIRD-PARTY-NOTICES.txt')){Copy-Item -LiteralPath (Join-Path $project $name) -Destination $payload -Recurse}
+foreach($name in @('server.mjs','core.mjs','workflow.mjs','benchmark.mjs','storage.mjs','platform.mjs','report-state.mjs','package.json','public','native','README.md','THIRD-PARTY-NOTICES.txt')){Copy-Item -LiteralPath (Join-Path $project $name) -Destination $payload -Recurse}
 Copy-Item -LiteralPath $node -Destination (Join-Path $payload 'node.exe')
 $csc=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $refs=@('/reference:System.Windows.Forms.dll','/reference:System.IO.Compression.dll','/reference:System.IO.Compression.FileSystem.dll','/reference:System.Web.Extensions.dll')

@@ -15,6 +15,7 @@ export async function scanStorage(root,{onProgress=()=>{},cancelled=()=>false,ma
   try{for await(const entry of handle){
    if(stop())break;result.entries++;
    const file=path.join(dir,entry.name);
+   if(process.platform!=='win32'&&(['/proc','/sys','/dev','/run','/mnt','/media'].includes(file)||(process.platform==='darwin'&&['/System','/Volumes'].includes(file)))){result.skipped++;result.partial=true;continue;}
    try{const stat=await fs.lstat(file);if(stat.isSymbolicLink()){result.skipped++;continue;}
     if(stat.isDirectory()){const size=await walk(file,depth+1);total+=size;top(result.folders,{path:file,bytes:size});}
     else if(stat.isFile()){total+=stat.size;result.bytes+=stat.size;result.fileCount++;top(result.files,{path:file,bytes:stat.size});}
