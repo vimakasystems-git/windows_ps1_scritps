@@ -9,7 +9,7 @@ version = json.loads((root / 'package.json').read_text(encoding='utf-8'))['versi
 out = root / 'build-portable'
 out.mkdir(exist_ok=True)
 files = [root / name for name in (
-    'server.mjs', 'platform.mjs', 'portable-launcher.mjs', 'Start-Vimaka.command',
+    'server.mjs', 'updates.mjs', 'platform.mjs', 'portable-launcher.mjs', 'Start-Vimaka.command',
     'core.mjs', 'benchmark.mjs', 'workflow.mjs', 'storage.mjs', 'report-state.mjs',
     'package.json', 'PORTABLE.md')]
 files += sorted((root / 'public').rglob('*'))

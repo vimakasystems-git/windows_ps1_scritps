@@ -1,3 +1,4 @@
+import {setupUpdate,renderUpdate} from './update.js';
 import {renderResultsDashboard} from './result-dashboard.js';
 import {setupVisual,renderVisual} from './visual-dashboard.js';
 import {setupDashboard,renderDashboard} from './dashboard.js';
@@ -14,14 +15,15 @@ function showPage(name){if(!Object.hasOwn(pageNames,name))name='overview';docume
 document.querySelectorAll('[data-page],[data-go]').forEach(b=>b.onclick=()=>showPage(b.dataset.page||b.dataset.go));
 function confirmAction(title,detail,admin=false){$('confirm-title').textContent=title;$('confirm-detail').textContent=detail;$('confirm-admin').textContent=admin?'Esta ação exige administrador. O Windows solicitará autorização ou login de uma conta administradora. Se você não possui essas credenciais, cancele e procure o administrador da máquina.':'A execução ficará registrada no histórico local.';const d=$('confirm');d.returnValue='cancel';d.showModal();return new Promise(resolve=>d.addEventListener('close',()=>resolve(d.returnValue==='ok'),{once:true}));}
 function render(){
+ renderUpdate(state);
  if(state.platform&&state.platform!=='win32'){
-  document.title='Vimaka '+state.systemName+' Care';
-  document.querySelector('.product-name').textContent=state.systemName.toUpperCase()+' CARE';
+  document.title='Vimaka Workstation Care';
+  document.querySelector('.product-name').textContent='WORKSTATION CARE';
   $('os-heading').textContent=state.systemName.toUpperCase();
   $('tools-description').textContent=t('Prévia: diagnóstico, benchmark e espaço em disco. Reparos automáticos não disponíveis.');
   $('windows-tools-note').hidden=true;
   $('optimize').hidden=true;$('performance-result').hidden=true;
-  $('platform-note').hidden=false;$('platform-note').textContent='Vimaka '+state.systemName+' Care · '+t('Prévia: diagnóstico, benchmark e espaço em disco. Reparos automáticos não disponíveis.');
+  $('platform-note').hidden=false;$('platform-note').textContent='Vimaka Workstation Care · '+state.systemName+' · '+t('Prévia: diagnóstico, benchmark e espaço em disco. Reparos automáticos não disponíveis.');
  }
 
  const finished=state.jobs?.find(j=>j.id===watchedJob&&j.status!=='running');
@@ -44,12 +46,12 @@ function render(){
  $('jobs').innerHTML=state.jobs?.length?state.jobs.map(j=>`<details class="job ${esc(j.status)}" ${j.status==='running'?'open':''}><summary><strong>${esc(j.title)}</strong><small>${esc(labels[j.status])} · ${esc(new Date(j.at).toLocaleString(locale()))}</small></summary><pre>${esc(j.log||'Aguardando resultado…')}</pre></details>`).join(''):'<article class="panel"><h2>Nenhuma ação executada</h2><p>Os resultados aparecerão aqui quando você usar uma ferramenta.</p></article>';
  $('scan').disabled=state.jobs?.some(j=>j.status==='running');
 }
-async function refresh(){try{state=await api('state');$('connection').textContent='Conectado a este PC';render();}catch(e){$('connection').textContent='Componente local desconectado';notice('Abra o executável Vimaka Windows Care para reconectar. '+e.message,true);}}
+async function refresh(){try{state=await api('state');$('connection').textContent='Conectado a este PC';render();}catch(e){$('connection').textContent='Componente local desconectado';notice('Abra o executável Vimaka Workstation Care para reconectar. '+e.message,true);}}
 async function action(id){try{const a=state.actions[id];if(await confirmAction(a.name,a.detail+(a.manual?' A janela criada pelo app será fechada após 10 segundos, quando identificável. Janelas já abertas serão preservadas.':''),a.admin)){await api('action',{id,confirm:true});notice('Ação iniciada. Acompanhe o histórico.');showPage('history');await refresh();}}catch(e){notice(e.message,true);}}
 $('scan').onclick=async()=>{try{await api('scan',{});notice('Lendo o estado do computador…');await refresh();}catch(e){notice(e.message,true);}};
 $('export').onclick=()=>{const c=state.comparison||{};if(!c.current)return notice('Atualize o diagnóstico primeiro.',true);const html=`<!doctype html><html lang="${locale()}"><meta charset="utf-8"><title>${t("Vimaka · Antes e depois")}</title><style>body{font:16px/1.6 system-ui;max-width:900px;margin:50px auto;color:#0f1729;padding:20px}table{width:100%;border-collapse:collapse}td,th{padding:15px;border-bottom:1px solid #ddd;text-align:left}h1{font-size:36px}</style><h1>${t("Vimaka · Antes e depois")}</h1>${$('comparison').innerHTML}<p>${t("Leituras em momentos diferentes não constituem benchmark. Não é possível afirmar aumento de velocidade com estes dados.")}</p><p>${t("Relatório local. Revise antes de compartilhar.")}</p></html>`;const url=URL.createObjectURL(new Blob([html],{type:'text/html'}));const a=document.createElement('a');a.href=url;a.download='Vimaka-antes-e-depois.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('open-cerebro').onclick=async()=>{try{await api('open-cerebro',{});notice('Cérebro Brasil aberto em uma janela própria.');}catch(e){notice(e.message,true);}};
-$('shutdown').onclick=async()=>{try{if(await confirmAction('Encerrar componente local','Conclua as operações em andamento. Para voltar, abra o atalho Vimaka Windows Care.')){await api('shutdown',{confirm:true});notice('Componente encerrado. Abra o atalho para reconectar.');$('connection').textContent='Desconectado';}}catch(e){notice(e.message,true);}};
+$('shutdown').onclick=async()=>{try{if(await confirmAction('Encerrar componente local','Conclua as operações em andamento. Para voltar, abra o atalho Vimaka Workstation Care.')){await api('shutdown',{confirm:true});notice('Componente encerrado. Abra o atalho para reconectar.');$('connection').textContent='Desconectado';}}catch(e){notice(e.message,true);}};
 let solutions=[];
 function ecosystem(){const q=$('search').value.toLocaleLowerCase();$('ecosystem-grid').innerHTML=solutions.filter(s=>(s.name+' '+s.category+' '+t(s.category)).toLocaleLowerCase().includes(q)).map(s=>`<article class="card"><span class="tag">${esc(s.category)}</span><h3>${esc(s.name)}</h3><p>${esc(new URL(s.url).hostname)}</p><a class="button" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">Abrir solução ↗</a></article>`).join('');}
 $('search').oninput=ecosystem;
@@ -63,3 +65,4 @@ if(document.modelContext?.registerTool){document.modelContext.registerTool({name
 document.addEventListener('languagechange',()=>{render();ecosystem();showPage(location.hash.slice(1)||'overview');translatePage();});
 setupVisual({api,refresh,notice});
 setupDashboard({api,refresh,confirmAction,notice,showPage});
+setupUpdate({api,refresh,notice});

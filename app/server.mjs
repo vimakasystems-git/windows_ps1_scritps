@@ -1,3 +1,4 @@
+import {createUpdater} from './updates.mjs';
 import {isWindows,systemName,dataDirectory,portableActions,portableSnapshot,portableStorage,portableNetwork} from './platform.mjs';
 import {recordReport} from './report-state.mjs';
 import {scanStorage} from './storage.mjs';
@@ -14,12 +15,15 @@ function safeAction(id){if(isWindows)return windowsSafeAction(id);if(!Object.has
 import {benchmark} from './benchmark.mjs';
 import {makeSteps,executeSteps} from './workflow.mjs';
 const here=path.dirname(fileURLToPath(import.meta.url));
+const nativeDir=await fs.access(path.join(here,'native')).then(()=>path.join(here,'native')).catch(()=>path.resolve(here,'../platforms/windows/native'));
 const data=process.env.VIMAKA_DATA || dataDirectory();
 const port=Number(process.env.VIMAKA_PORT||47831), origin=`http://127.0.0.1:${port}`;
 const ps=path.join(process.env.WINDIR||'C:\\Windows','System32','WindowsPowerShell','v1.0','powershell.exe');
 await fs.mkdir(data,{recursive:true});
 let storageInfo;
 async function getStorageInfo(){if(!isWindows)return portableStorage();storageInfo??=JSON.parse((await runPS('StorageInfo.ps1',[],undefined,30000)).replace(/^\uFEFF/,''));return storageInfo;}
+const appVersion=JSON.parse(await fs.readFile(path.join(here,'package.json'),'utf8')).version;
+const updater=createUpdater({current:appVersion,data});
 const jobs=new Map(), csrf=crypto.randomBytes(32).toString('hex');
 const jsonRead=async(file,fallback)=>{try{return JSON.parse((await fs.readFile(file,'utf8')).replace(/^\uFEFF/,''));}catch{return fallback;}};
 async function persist(){await fs.writeFile(path.join(data,'history.json'),JSON.stringify([...jobs.values()].slice(-100),null,2));}
@@ -32,7 +36,7 @@ function processRun(file,args,job,timeout=1800000){return new Promise((resolve,r
   child.once('error',err=>{clearTimeout(timer);reject(err);});
   child.once('close',code=>{clearTimeout(timer);if(code!==0)reject(Error(`Código ${code}: ${output.slice(-6000)}`));else resolve(output);});
 });}
-function runPS(file,args=[],job,timeout){return processRun(ps,['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',path.join(here,'native',file),...args],job,timeout);}
+function runPS(file,args=[],job,timeout){return processRun(ps,['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',path.join(nativeDir,file),...args],job,timeout);}
 function newJob(title,work){
   if([...jobs.values()].some(j=>j.status==='running'))throw Error('Aguarde a operação atual terminar.');
   const job={id:crypto.randomUUID(),title,status:'running',at:new Date().toISOString(),log:''};jobs.set(job.id,job);
@@ -89,10 +93,13 @@ const server=http.createServer(async(req,res)=>{
     if(req.headers.origin && req.headers.origin!==origin)return send(res,403,{error:'Origem não autorizada.'});
     if(req.headers['sec-fetch-site']==='cross-site')return send(res,403,{error:'Acesso externo não permitido.'});
     const url=new URL(req.url,origin);
-    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.2.0',local:true,platform:process.platform,systemName});
+    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:appVersion,local:true,platform:process.platform,systemName});
     if(url.pathname.startsWith('/api/')&&req.method!=='GET'){
       if(req.headers.origin!==origin||req.headers['x-vimaka-token']!==csrf||!req.headers['content-type']?.startsWith('application/json'))return send(res,403,{error:'Sessão local inválida. Reabra o aplicativo.'});
     }
+    if(req.method==='GET'&&url.pathname==='/api/update/check')return send(res,200,await updater.check());
+    if(req.method==='POST'&&url.pathname==='/api/update/download'){const b=await body(req);if(b.confirm!==true)throw Error('Confirme o download.');return send(res,202,newJob('Atualização',async job=>{job.kind='update';await updater.download(job);}));}
+    if(req.method==='POST'&&url.pathname==='/api/update/open'){const b=await body(req);if(b.confirm!==true||[...jobs.values()].some(j=>j.status==='running'))throw Error('Conclua as operações antes de instalar.');return send(res,200,await updater.open(b.id));}
     if(req.method==='GET'&&url.pathname==='/api/state'){
       return send(res,200,{comparison:await jsonRead(path.join(data,'comparison.json'),{}),platform:process.platform,systemName,storage:await jsonRead(path.join(data,'storage.json'),null),actions,jobs:[...jobs.values()].reverse().slice(0,100)});
     }
@@ -125,10 +132,10 @@ const server=http.createServer(async(req,res)=>{
     const root=path.join(here,'public'),file=path.resolve(root,rel);
     if(!file.startsWith(root+path.sep))return send(res,403,{error:'Caminho inválido.'});
     let content=await fs.readFile(file).catch(()=>null);if(!content)return send(res,404,{error:'Arquivo inexistente.'});
-    if(!isWindows&&rel==='manifest.webmanifest'){const manifest=JSON.parse(content.toString());manifest.name='Vimaka '+systemName+' Care';manifest.short_name='Vimaka Care';manifest.description='Local diagnostics, benchmark and storage analysis — preview';content=Buffer.from(JSON.stringify(manifest));}
+    if(!isWindows&&rel==='manifest.webmanifest'){const manifest=JSON.parse(content.toString());manifest.name='Vimaka Workstation Care';manifest.short_name='Vimaka Care';manifest.description='Local diagnostics, benchmark and storage analysis — preview';content=Buffer.from(JSON.stringify(manifest));}
     const type={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webmanifest':'application/manifest+json','.png':'image/png','.svg':'image/svg+xml','.ttf':'font/ttf','.ico':'image/x-icon'}[path.extname(file)]||'application/octet-stream';
     res.writeHead(200,{'Content-Type':type,'Cache-Control':'no-cache'});res.end(content);
   }catch(e){send(res,400,{error:e.message});}
 });
 server.requestTimeout=15000;server.headersTimeout=10000;
-server.listen(port,'127.0.0.1',()=>console.log('Vimaka Windows Care: '+origin));
+server.listen(port,'127.0.0.1',()=>console.log('Vimaka Workstation Care: '+origin));

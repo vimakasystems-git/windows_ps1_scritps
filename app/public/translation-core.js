@@ -12,6 +12,6 @@ export function translate(value,language='pt-BR'){
  .replace(/versão de avaliação/g,language==='en'?'evaluation version':'versión de evaluación')
  .replace(/São Paulo · Brasil/g,language==='en'?'São Paulo · Brazil':'São Paulo · Brasil')
  .replace(/^Baixar /,language==='en'?'Download ':'Descargar ')
- .replace(/Abra o executável Vimaka Windows Care para reconectar\./g,language==='en'?'Open Vimaka Windows Care to reconnect.':'Abra Vimaka Windows Care para reconectar.');
+ .replace(/Abra o executável Vimaka Workstation Care para reconectar\./g,language==='en'?'Open Vimaka Workstation Care to reconnect.':'Abra Vimaka Workstation Care para reconectar.');
  return result.replace(pattern,key=>dictionary.get(key)?.[index] ?? key);
 }

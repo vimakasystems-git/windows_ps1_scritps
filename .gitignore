@@ -15,3 +15,8 @@ vimaka-windows/build-*/
 vimaka-windows/data/
 *.result.json
 node_modules/
+
+app/build/
+app/build-*/
+app/data/
+dist/

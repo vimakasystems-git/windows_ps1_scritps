@@ -1,5 +1,15 @@
 // Application copy only. Commands, diagnostic evidence and user input stay original.
 export const rows = `
+Atualizações|Updates|Actualizaciones
+Verificar atualização|Check for updates|Buscar actualizaciones
+Baixar atualização|Download update|Descargar actualización
+Abrir instalador|Open installer|Abrir instalador
+Consultando GitHub…|Checking GitHub…|Consultando GitHub…
+Você já está na versão mais recente.|You have the latest version.|Ya tienes la versión más reciente.
+Baixando e verificando o instalador…|Downloading and verifying installer…|Descargando y verificando el instalador…
+Conclua a instalação na janela do sistema. Pode ser necessária autorização de administrador.|Complete installation in the system window. Administrator authorization may be required.|Completa la instalación en la ventana del sistema. Puede requerir autorización de administrador.
+O instalador correto para este sistema será baixado do GitHub e verificado antes de abrir. Seus relatórios serão preservados.|The installer for this system will be downloaded from GitHub and verified before opening. Your reports will be preserved.|Se descargará de GitHub el instalador para este sistema y se verificará antes de abrirlo. Se conservarán tus informes.
+
 Prévia: diagnóstico, benchmark e espaço em disco. Reparos automáticos não disponíveis.|Preview: diagnostics, benchmark and disk space. Automated repairs unavailable.|Vista previa: diagnóstico, benchmark y espacio en disco. Reparaciones automáticas no disponibles.
 Inventário parcial de inicialização|Partial startup inventory|Inventario parcial de inicio
 Não medido|Not measured|No medido
@@ -258,7 +268,7 @@ Sucesso indica a conclusão da ação, não uma garantia de aumento de desempenh
 FEITO POR PESSOAS, PARA PESSOAS|MADE BY PEOPLE, FOR PEOPLE|HECHO POR PERSONAS, PARA PERSONAS
 Gostou da ferramenta?|Enjoying the tool?|¿Le gusta la herramienta?
 Apoie o desenvolvedor.|Support the developer.|Apoye al desarrollador.
-Uma contribuição de qualquer valor ajuda a continuar desenvolvendo o Vimaka Windows Care.|A contribution of any amount helps continue developing Vimaka Windows Care.|Una contribución de cualquier importe ayuda a continuar desarrollando Vimaka Windows Care.
+Uma contribuição de qualquer valor ajuda a continuar desenvolvendo o Vimaka Workstation Care.|A contribution of any amount helps continue developing Vimaka Workstation Care.|Una contribución de cualquier importe ayuda a continuar desarrollando Vimaka Workstation Care.
 Contribuição voluntária|Voluntary contribution|Contribución voluntaria
 Mais tempo para criar.|More time to create.|Más tiempo para crear.
 Mais cuidado com seu Windows.|More care for your Windows.|Más cuidado para su Windows.
@@ -324,7 +334,7 @@ Lendo o estado do computador…|Reading computer status…|Leyendo el estado del
 Atualize o diagnóstico primeiro.|Refresh diagnostics first.|Actualice el diagnóstico primero.
 Nenhum dos padrões verificados foi encontrado. Isso não é uma análise de segurança completa.|None of the checked patterns were found. This is not a complete security analysis.|No se encontró ninguno de los patrones comprobados. Esto no es un análisis de seguridad completo.
 Cérebro Brasil aberto em uma janela própria.|Cérebro Brasil opened in its own window.|Cérebro Brasil se abrió en una ventana propia.
-Conclua as operações em andamento. Para voltar, abra o atalho Vimaka Windows Care.|Finish any running operations. To return, open the Vimaka Windows Care shortcut.|Finalice las operaciones en curso. Para volver, abra el acceso directo de Vimaka Windows Care.
+Conclua as operações em andamento. Para voltar, abra o atalho Vimaka Workstation Care.|Finish any running operations. To return, open the Vimaka Workstation Care shortcut.|Finalice las operaciones en curso. Para volver, abra el acceso directo de Vimaka Workstation Care.
 Componente encerrado. Abra o atalho para reconectar.|Component stopped. Open the shortcut to reconnect.|Componente detenido. Abra el acceso directo para reconectar.
 Desconectado|Disconnected|Desconectado
 No Edge ou Chrome, abra o menu do navegador e escolha “Instalar este site como aplicativo”. O executável também abre a interface em janela de app.|In Edge or Chrome, open the browser menu and choose “Install this site as an app”. The executable also opens the interface in an app window.|En Edge o Chrome, abra el menú del navegador y elija “Instalar este sitio como una aplicación”. El ejecutable también abre la interfaz en una ventana de aplicación.

@@ -1,3 +1,9 @@
+# Vimaka Workstation Care
+
+Aplicativo e instaladores: [documentação](app/README.md). Código compartilhado em app/ e pacotes por sistema em platforms/windows, platforms/linux e platforms/macos.
+
+---
+
 # Windows PowerShell Scripts
 
 Scripts para auditar e ajustar o Windows para uma rotina de desenvolvimento.
