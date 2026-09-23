@@ -1,5 +1,23 @@
 // Application copy only. Commands, diagnostic evidence and user input stay original.
 export const rows = `
+COMPARAÇÃO OPCIONAL|OPTIONAL COMPARISON|COMPARACIÓN OPCIONAL
+Comparar com Geekbench|Compare with Geekbench|Comparar con Geekbench
+Execute o Geekbench 7 CPU no seu computador.|Run Geekbench 7 CPU on your computer.|Ejecuta Geekbench 7 CPU en tu computadora.
+Copie a pontuação Single-Core e informe abaixo.|Copy the Single-Core score and enter it below.|Copia la puntuación Single-Core e introdúcela abajo.
+Veja sua posição entre as referências selecionadas.|See your position among the selected references.|Consulta tu posición entre las referencias seleccionadas.
+Limpar pontuação|Clear score|Borrar puntuación
+DESEMPENHO DO SEU PC|YOUR PC PERFORMANCE|RENDIMIENTO DE TU PC
+Meça. Compare. Entenda.|Measure. Compare. Understand.|Mide. Compara. Comprende.
+Teste local rápido e comparação opcional com Geekbench.|Quick local test and optional Geekbench comparison.|Prueba local rápida y comparación opcional con Geekbench.
+▶ Executar benchmark local|▶ Run local benchmark|▶ Ejecutar benchmark local
+Pronto para medir.|Ready to measure.|Listo para medir.
+Benchmark em execução|Benchmark running|Benchmark en ejecución
+Feche tarefas pesadas para reduzir interferências. O teste local não altera configurações do Windows.|Close demanding tasks to reduce interference. The local test does not change Windows settings.|Cierra tareas pesadas para reducir interferencias. La prueba local no cambia ajustes de Windows.
+Informe seu resultado Geekbench para incluir seu PC nesta comparação.|Enter your Geekbench result to include your PC in this comparison.|Introduce tu resultado Geekbench para incluir tu PC en esta comparación.
+Medindo desempenho…|Measuring performance…|Midiendo rendimiento…
+Benchmark concluído|Benchmark completed|Benchmark completado
+Última medição local|Last local measurement|Última medición local
+
 Espaço em disco|Disk space|Espacio en disco
 Seu computador, bem cuidado.|A little care for your computer.|Cuida de tu computadora.
 SEU PRÓXIMO PASSO|YOUR NEXT STEP|TU PRÓXIMO PASO

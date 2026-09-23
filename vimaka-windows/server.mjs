@@ -54,7 +54,7 @@ async function executeAction(id,job){
 }
 function workflow(mode){
  const steps=makeSteps(mode);
- return newJob(mode==='performance'?'Melhorar desempenho':'Diagnóstico completo',async job=>{
+ return newJob(mode==='performance'?'Melhorar desempenho':mode==='benchmark'?'Benchmark local':'Diagnóstico completo',async job=>{
   job.steps=steps;job.progress=0;job.mode=mode;
   await executeSteps(job,async step=>{
    if(['inventory','before','after'].includes(step.id)){
@@ -64,7 +64,7 @@ function workflow(mode){
    }else if(step.id==='report'){
     const comparison=await jsonRead(path.join(data,'comparison.json'),{});
     if(mode==='performance'&&job.before&&job.after){comparison.before=job.before;comparison.current=job.after;comparison.notes='Comparação desta execução. Variações de carga e temperatura afetam as leituras.';}
-    comparison.benchmarkBefore=job.benchmarkBefore||null;comparison.benchmarkAfter=job.benchmarkAfter||null;comparison.reportJob=job.id;
+    comparison.benchmarkBefore=mode==='benchmark'?(comparison.benchmarkAfter||null):(job.benchmarkBefore||null);comparison.benchmarkAfter=job.benchmarkAfter||null;comparison.reportJob=job.id;
     await fs.writeFile(path.join(data,'comparison.json'),JSON.stringify(comparison,null,2));
     await fs.mkdir(path.join(data,'reports'),{recursive:true});await fs.writeFile(path.join(data,'reports',job.id+'.json'),JSON.stringify({jobId:job.id,mode,comparison},null,2));
    }else{
@@ -83,7 +83,7 @@ const server=http.createServer(async(req,res)=>{
     if(req.headers.origin && req.headers.origin!==origin)return send(res,403,{error:'Origem não autorizada.'});
     if(req.headers['sec-fetch-site']==='cross-site')return send(res,403,{error:'Acesso externo não permitido.'});
     const url=new URL(req.url,origin);
-    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.1.8',local:true});
+    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.1.9',local:true});
     if(url.pathname.startsWith('/api/')&&req.method!=='GET'){
       if(req.headers.origin!==origin||req.headers['x-vimaka-token']!==csrf||!req.headers['content-type']?.startsWith('application/json'))return send(res,403,{error:'Sessão local inválida. Reabra o aplicativo.'});
     }

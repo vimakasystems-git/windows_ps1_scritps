@@ -1,4 +1,5 @@
 export const plans={
+ benchmark:[['benchmark','Medir desempenho local'],['report','Gerar dashboard e relatório']],
  diagnostic:[['inventory','Coletar configuração'],['network','Diagnosticar rede'],['benchmark','Medir desempenho local'],['report','Gerar dashboard e relatório']],
  performance:[['before','Registrar antes'],['benchmarkBefore','Medir desempenho antes'],['network','Diagnosticar rede'],['energy','Ativar Alto desempenho'],['dns','Limpar cache DNS'],['health','Verificar integridade'],['repair','Reparar arquivos do Windows'],['after','Registrar depois'],['benchmarkAfter','Medir desempenho depois'],['report','Gerar comparação']]
 };

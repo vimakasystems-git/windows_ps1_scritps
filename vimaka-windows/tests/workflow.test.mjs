@@ -1,6 +1,9 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {makeSteps,executeSteps} from '../workflow.mjs';
 import {rankScore} from '../public/benchmark-ranking.js';
+test('benchmark independente apenas mede e gera relatorio',()=>{
+ assert.deepEqual(makeSteps('benchmark').map(x=>x.id),['benchmark','report']);
+});
 test('fluxo automatico nao abre configuracoes nem desfaz energia no final',()=>{
  const ids=makeSteps('performance').map(s=>s.id);
  for(const manual of ['storage','startup','updates','audio','printers','reliability','restoreEnergy'])assert.ok(!ids.includes(manual));
