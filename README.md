@@ -10,7 +10,7 @@ Scripts para auditar e ajustar o Windows para uma rotina de desenvolvimento.
 
 ## Aplicativo Vimaka Windows Care
 
-A pasta [vimaka-windows](vimaka-windows/README.md) contem um aplicativo local com interface PWA, instalador Windows, comparativo antes/depois, ferramentas de diagnostico e reparo, links para as 27 solucoes do ecossistema Vimaka. Esta em versao de avaliacao 0.1.11. Consulte os requisitos, limites e instrucoes de compilacao no README do aplicativo.
+A pasta [app](app/README.md) contem um aplicativo local com interface PWA, instalador Windows, comparativo antes/depois, ferramentas de diagnostico e reparo, links para as 27 solucoes do ecossistema Vimaka. A versão atual é Vimaka Workstation Care 0.3.0, com instaladores Windows, Linux e macOS e atualização pelo GitHub. Consulte os requisitos, limites e instrucoes de compilacao no README do aplicativo.
 
 ## Windows-Dev-Tuning.ps1
 
