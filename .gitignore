@@ -1,0 +1,12 @@
+# Inventarios e artefatos locais: nunca publicar
+Auditoria-*.json
+before.json
+after.json
+*.log
+*.clixml
+*.reg
+*.pid
+LEIA-ME-Tuning.md
+Repair-Tuning.ps1
+.env
+.env.*
