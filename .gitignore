@@ -20,3 +20,11 @@ app/build/
 app/build-*/
 app/data/
 dist/
+
+platforms/android/.gradle/
+platforms/android/**/build/
+platforms/android/local.properties
+platforms/ios/*.xcodeproj/
+platforms/ios/Info.plist
+platforms/ios/build/
+*.xcresult/
