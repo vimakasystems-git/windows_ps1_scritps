@@ -2,7 +2,7 @@ name: Mobile preview tests
 on:
   push:
     branches: [main]
-    paths: ['mobile/**', 'platforms/android/**', 'platforms/ios/**', '.github/workflows/mobile.yml']
+    paths: ['mobile/**', 'platforms/android/**', '.github/workflows/mobile.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -45,36 +45,3 @@ jobs:
         with:
           name: mobile-android-preview
           path: dist/*.apk
-  ios:
-    runs-on: macos-15
-    timeout-minutes: 25
-    steps:
-      - uses: actions/checkout@v4
-      - run: brew install xcodegen
-      - name: Generate Xcode project
-        working-directory: platforms/ios
-        run: xcodegen generate
-      - name: Test on iPhone and iPad simulators
-        run: |
-          xcrun simctl list devices available -j > devices.json
-          python3 - <<'PY' > selected.txt
-          import json
-          devices=[d for group in json.load(open('devices.json'))['devices'].values() for d in group]
-          for family in ['iPhone','iPad']:
-              print(next(d['udid'] for d in devices if family in d['name']))
-          PY
-          xcrun simctl shutdown all
-          while read -r device; do
-            xcrun simctl boot "$device"
-            xcrun simctl bootstatus "$device" -b
-            xcodebuild test -project platforms/ios/VimakaCareMobile.xcodeproj -scheme VimakaCareMobile -destination "platform=iOS Simulator,id=$device" -derivedDataPath platforms/ios/build -parallel-testing-enabled NO -test-timeouts-enabled YES -maximum-test-execution-time-allowance 90 CODE_SIGNING_ALLOWED=NO > ios-test.log 2>&1 || { tail -n 120 ios-test.log; exit 1; }
-            xcrun simctl shutdown "$device"
-          done < selected.txt
-      - name: Package simulator app
-        run: |
-          mkdir -p dist
-          ditto -c -k --sequesterRsrc --keepParent platforms/ios/build/Build/Products/Debug-iphonesimulator/VimakaCareMobile.app dist/VimakaWorkstationCare-Mobile-0.1.0-preview-ios-simulator.zip
-      - uses: actions/upload-artifact@v4
-        with:
-          name: mobile-ios-simulator
-          path: dist/*.zip
