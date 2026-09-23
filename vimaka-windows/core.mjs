@@ -3,12 +3,12 @@ export const actions = {
   health:{name:'Verificar integridade',detail:'DISM /CheckHealth consulta corrupção já detectada. Não repara arquivos.',admin:true},
   repair:{name:'Reparar arquivos do Windows',detail:'Executa DISM /RestoreHealth e depois SFC /scannow. Pode baixar arquivos da Microsoft e levar vários minutos.',admin:true},
   dns:{name:'Limpar cache DNS',detail:'Limpa somente o cache de resolução de nomes. Não muda o servidor DNS.',admin:true},
-  storage:{name:'Revisar armazenamento',detail:'Abre as configurações de armazenamento. Você escolhe o que apagar.',admin:false},
-  startup:{name:'Revisar inicialização',detail:'Abre a lista de aplicativos iniciados com o Windows.',admin:false},
-  updates:{name:'Abrir Windows Update',detail:'Abre as configurações de atualização. Não instala automaticamente.',admin:false},
-  audio:{name:'Resolver problemas de áudio',detail:'Abre as configurações de som do Windows.',admin:false},
-  printers:{name:'Revisar impressoras',detail:'Abre as configurações de impressoras e scanners.',admin:false},
-  reliability:{name:'Histórico de falhas',detail:'Abre o Monitor de Confiabilidade para investigar travamentos.',admin:false},
+  storage:{manual:true,name:'Revisar armazenamento',detail:'Abre as configurações de armazenamento. Você escolhe o que apagar.',admin:false},
+  startup:{manual:true,name:'Revisar inicialização',detail:'Abre a lista de aplicativos iniciados com o Windows.',admin:false},
+  updates:{manual:true,name:'Abrir Windows Update',detail:'Abre as configurações de atualização. Não instala automaticamente.',admin:false},
+  audio:{manual:true,name:'Resolver problemas de áudio',detail:'Abre as configurações de som do Windows.',admin:false},
+  printers:{manual:true,name:'Revisar impressoras',detail:'Abre as configurações de impressoras e scanners.',admin:false},
+  reliability:{manual:true,name:'Histórico de falhas',detail:'Abre o Monitor de Confiabilidade para investigar travamentos.',admin:false},
   energy:{name:'Ativar Alto desempenho',detail:'Muda o plano de energia e salva o plano anterior. Pode aumentar calor e consumo.',admin:false},
   restoreEnergy:{name:'Restaurar plano anterior',detail:'Restaura o plano salvo pelo botão Alto desempenho deste aplicativo.',admin:false}
 

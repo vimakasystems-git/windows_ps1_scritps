@@ -1,4 +1,4 @@
-# Vimaka Windows Care 0.1.5
+# Vimaka Windows Care 0.1.6
 
 Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo do Windows. Versao de avaliacao; nao e uma garantia de ganho de desempenho .
 
@@ -31,7 +31,7 @@ Ferramentas: diagnostico de rede, DISM CheckHealth, DISM RestoreHealth seguido d
 
 Abre o site em uma janela propria para consultar orientacoes. O aplicativo nao le conversas privadas nem importa ou executa comandos do chat. Use as ferramentas fixas de diagnostico e reparo apos revisar sua descricao.
 
-O laboratorio, a execucao de scripts e o download de pacotes foram retirados deste produto na versao 0.1.5. Historicos e arquivos anteriores sao preservados; o recurso opcional Windows Sandbox ja habilitado no sistema nao e alterado por esta atualizacao.
+O laboratorio, a execucao de scripts e o download de pacotes foram retirados deste produto na versao 0.1.6. Historicos e arquivos anteriores sao preservados; o recurso opcional Windows Sandbox ja habilitado no sistema nao e alterado por esta atualizacao.
 
 ## Seguranca e privacidade
 
@@ -69,7 +69,7 @@ Os testes verificam o CRC com exemplo do Banco Central, ausencia de valor fixo e
 Interface em portugues (Brasil), ingles e espanhol. Use o seletor de idioma no topo; a preferencia fica salva no navegador. Sem preferencia salva, usa o idioma do navegador quando suportado, senao portugues. Textos de interface, ferramentas, confirmacoes e relatorio acompanham a escolha. Comandos, entradas do usuario, evidencias e logs nativos preservam o idioma original. As mensagens do instalador/launcher seguem o idioma do Windows (pt/en/es); mensagens nativas do sistema e logs nao sao traduzidos.
 
 O rodape inclui encomendas de software Windows pelo WhatsApp +55 11 94554-6072 (https://wa.me/5511945546072) e https://vimaka.com. O contato abre externamente; nenhuma mensagem e enviada automaticamente.
-## Atualizacao e requisitos (0.1.5)
+## Atualizacao e requisitos (0.1.6)
 
 O instalador extrai o pacote em uma pasta temporaria, verifica Windows x64/PowerShell 5.1, testa o Node incluido e verifica navegador compativel. Mostra o que sera instalado e por que. Se faltar navegador, oferece instalar Edge pelo catalogo oficial da Microsoft, verificando SHA-256 e Authenticode antes de chamar o instalador. Essa dependencia exige autorizacao do administrador. Falhas de download, cancelamento ou requisitos incompativeis interrompem a atualizacao.
 
@@ -80,3 +80,14 @@ Nao encerra processos a forca nem interrompe reparos. A pasta app anterior e mov
 O app instala por usuario, sem elevacao. DISM, SFC e limpeza DNS pedem permissao atraves do UAC do Windows. O app explica previamente que uma conta administradora e necessaria. Sem credenciais, o usuario deve cancelar e procurar o administrador. Senhas nunca sao pedidas ou guardadas pelo app.
 
 Validacao local: atualizacao com componente em execucao e preservacao de comparison.json/history.json. Nao validado em conta padrao separada nem em maquina sem navegador; esses cenarios precisam de teste em Windows limpo antes de distribuicao ampla.
+## Diagnóstico, melhoria e benchmark (0.1.6)
+
+A tela inicial oferece Executar diagnóstico e Melhorar desempenho. Cada execução mostra tempo decorrido, log nativo, checklist e progresso por etapas concluídas (não estimativa de tempo). Falhas e etapas ignoradas ficam explícitas. O fluxo de melhoria registra antes/depois, mede o desempenho, diagnostica rede, ativa Alto desempenho, limpa DNS e verifica/repara arquivos do Windows. Se houver reinício pendente, pula DISM/SFC e informa o motivo. Não desativa serviços ou aplicativos indiscriminadamente.
+
+O relatório HTML reúne CPU, GPU, memória, discos, placa-mãe, BIOS, sistema, inicialização, comparação e etapas executadas. Os dados ficam locais; revise o relatório antes de compartilhá-lo. Telas manuais de configuração não fazem parte dos fluxos automáticos. Quando abertas pelas ferramentas individuais, solicita fechamento após 10 segundos somente se identificar uma nova janela; janelas preexistentes ou compartilhadas são preservadas.
+
+O protocolo vimaka-micro-v1 mede SHA-256 em uma thread (mediana de três amostras após aquecimento), cópia de memória e escrita/leitura de arquivo temporário de 32 MiB. A leitura pode vir do cache do sistema; não é medição do disco físico. Resultados variam com carga, temperatura e runtime. Variação negativa também é exibida, sem prometer aceleração. Não testa GPU nem equivale a uma avaliação completa do computador.
+
+A comparação opcional aceita pontuação Geekbench 7 CPU Single-Core informada pelo usuário. Exibe a posição entre seis CPUs selecionadas da tabela oficial, com fonte e data em benchmark-references.json. Não verifica o resultado informado, não executa nem publica Geekbench automaticamente, e não mistura as pontuações com o microteste local. Não é ranking mundial ou de computadores completos.
+
+Validação: nove testes automatizados; diagnóstico e melhoria executados localmente. Nesta máquina o reparo foi corretamente ignorado por reinício pendente; verificação de integridade, DNS, energia, inventário e medições concluíram. A medição após o fluxo foi inferior à anterior, mostrando a variação real sem mascará-la.

@@ -19,6 +19,8 @@ test('API local bloqueia origens externas, ações arbitrárias e endpoints remo
   const hostStatus=await new Promise((resolve,reject)=>{http.get(base+'/api/session',{headers:{Host:'attacker.example:47839'}},r=>{r.resume();resolve(r.statusCode);}).once('error',reject);});
   assert.equal(hostStatus,403);
   assert.equal((await post('action',{id:'cmd.exe',confirm:true})).status,400);
+  assert.equal((await post('workflow',{mode:'invalid',confirm:true})).status,400);
+  assert.equal((await post('workflow',{mode:'performance'})).status,400);
   for(const route of ['draft','package','sandbox'])assert.equal((await post(route,{id:'git',text:'Write-Output "test"',confirm:true})).status,404);
   assert.equal((await post('action',{id:'sandboxEnable',confirm:true})).status,400);
   const state=await(await fetch(base+'/api/state')).json();assert.equal(state.jobs.length,0);assert.equal(state.actions.sandboxEnable,undefined);assert.equal(state.packages,undefined);assert.equal(state.sandboxPresent,undefined);

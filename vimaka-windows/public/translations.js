@@ -1,5 +1,67 @@
 // Application copy only. Commands, diagnostic evidence and user input stay original.
 export const rows = `
+Comparação desta execução. Variações de carga e temperatura afetam as leituras.|Comparison for this run. Workload and temperature changes affect readings.|Comparación de esta ejecución. Las variaciones de carga y temperatura afectan las lecturas.
+
+Janela de configuração|Settings window|Ventana de configuración
+A janela criada pelo app será fechada após 10 segundos, quando identificável. Janelas já abertas serão preservadas.|The window created by the app will close after 10 seconds when identifiable. Existing windows will be preserved.|La ventana creada por la app se cerrará tras 10 segundos cuando se pueda identificar. Las ventanas existentes se conservarán.
+Informe uma pontuação válida do Geekbench 7 CPU Single-Core.|Enter a valid Geekbench 7 CPU Single-Core score.|Introduzca una puntuación válida de Geekbench 7 CPU Single-Core.
+Memória livre varia com a carga. O microbenchmark registra esta execução; não garante aceleração permanente. Tempo de boot não foi medido.|Free memory varies with workload. The microbenchmark records this run; it does not guarantee lasting acceleration. Boot time was not measured.|La memoria libre varía con la carga. El microbenchmark registra esta ejecución; no garantiza aceleración permanente. No se midió el tiempo de arranque.
+▶ Executar diagnóstico|▶ Run diagnostics|▶ Ejecutar diagnóstico
+⚡ Melhorar desempenho|⚡ Improve performance|⚡ Mejorar rendimiento
+Melhorar desempenho|Improve performance|Mejorar rendimiento
+Diagnóstico completo|Full diagnostics|Diagnóstico completo
+Concluído com avisos|Completed with warnings|Completado con avisos
+Coletar configuração|Collect configuration|Recopilar configuración
+Medir desempenho local|Measure local performance|Medir rendimiento local
+Gerar dashboard e relatório|Generate dashboard and report|Generar panel e informe
+Registrar antes|Record before|Registrar antes
+Registrar depois|Record after|Registrar después
+Medir desempenho antes|Measure performance before|Medir rendimiento antes
+Medir desempenho depois|Measure performance after|Medir rendimiento después
+Gerar comparação|Generate comparison|Generar comparación
+Configuração da máquina|Computer configuration|Configuración del equipo
+Exportar relatório geral|Export full report|Exportar informe completo
+Relatório geral da máquina|Full computer report|Informe completo del equipo
+Execute o diagnóstico para obter a configuração.|Run diagnostics to collect the configuration.|Ejecute el diagnóstico para obtener la configuración.
+Execute o diagnóstico primeiro.|Run diagnostics first.|Ejecute el diagnóstico primero.
+Ver configuração completa|View full configuration|Ver configuración completa
+Configuração completa|Full configuration|Configuración completa
+Benchmark local|Local benchmark|Benchmark local
+Microteste de CPU SHA-256 em uma thread, cópia de memória e arquivo temporário de 32 MiB. Não mede jogos ou GPU. A leitura de arquivo pode usar cache do Windows.|Single-thread SHA-256 CPU microtest, memory copy and a 32 MiB temporary file. Does not measure games or GPU. File reads may use the Windows cache.|Microprueba SHA-256 de CPU en un hilo, copia de memoria y archivo temporal de 32 MiB. No mide juegos ni GPU. La lectura puede usar la caché de Windows.
+Execute o diagnóstico para medir.|Run diagnostics to measure.|Ejecute el diagnóstico para medir.
+Comparar com processadores de referência|Compare with reference processors|Comparar con procesadores de referencia
+Comparação opcional: informe seu resultado Geekbench 7 CPU Single-Core. O teste local acima usa outra escala e não entra neste ranking. O Geekbench gratuito publica seus resultados no serviço deles.|Optional comparison: enter your Geekbench 7 CPU Single-Core result. The local test uses a different scale and is not included in this ranking. Free Geekbench publishes results to its service.|Comparación opcional: introduzca su resultado Geekbench 7 CPU Single-Core. La prueba local usa otra escala y no entra en este ranking. Geekbench gratuito publica los resultados en su servicio.
+Obter Geekbench ↗|Get Geekbench ↗|Obtener Geekbench ↗
+Pontuação Geekbench 7 Single-Core|Geekbench 7 Single-Core score|Puntuación Geekbench 7 Single-Core
+Comparar resultado informado|Compare entered result|Comparar resultado introducido
+Referências: seleção de CPUs, não PCs completos. Fonte:|References: selected CPUs, not complete PCs. Source:|Referencias: selección de CPU, no equipos completos. Fuente:
+, consultada em 23/09/2026. Não representa ranking mundial.|, accessed on 2026-09-23. Not a worldwide ranking.|, consultada el 23/09/2026. No representa un ranking mundial.
+Posição no grupo|Position in this group|Posición en el grupo
+Seu resultado informado|Your entered result|Su resultado introducido
+Pontuação informada pelo usuário, não verificada. Comparação somente com as referências exibidas.|User-entered score, not verified. Compared only with the displayed references.|Puntuación introducida por el usuario, no verificada. Comparación solo con las referencias mostradas.
+Microteste local; não representa desempenho geral nem é comparável ao Geekbench.|Local microtest; does not represent overall performance and is not comparable to Geekbench.|Microprueba local; no representa el rendimiento general ni es comparable con Geekbench.
+Etapas da execução|Execution steps|Etapas de ejecución
+Progresso por etapas concluídas; não é estimativa de tempo restante.|Progress by completed steps; not an estimate of remaining time.|Progreso por etapas finalizadas; no es una estimación del tiempo restante.
+Não executado|Not executed|No ejecutado
+Aguardando|Waiting|En espera
+Ver log em execução|View live log|Ver registro de ejecución
+Sistema|System|Sistema
+Modelo|Model|Modelo
+Processador|Processor|Procesador
+Memória instalada|Installed memory|Memoria instalada
+Discos|Drives|Discos
+Reinício pendente|Restart pending|Reinicio pendiente
+Sim|Yes|Sí
+Não|No|No
+Métrica|Metric|Métrica
+Antes|Before|Antes
+Agora|Now|Ahora
+Variação medida|Measured change|Variación medida
+Cópia de memória (MiB/s)|Memory copy (MiB/s)|Copia de memoria (MiB/s)
+Gravação de arquivo (MiB/s)|File write (MiB/s)|Escritura de archivo (MiB/s)
+Leitura com cache (MiB/s)|Cached read (MiB/s)|Lectura con caché (MiB/s)
+Será feita uma medição antes/depois, diagnóstico de rede, ativação de Alto desempenho, limpeza DNS e verificação/reparo de arquivos. Alto desempenho pode aumentar consumo e calor. Reparos exigem administrador e podem demorar. Com reinício pendente, o reparo será ignorado e sinalizado. Nenhuma tela de configurações será aberta.|This will measure before/after, diagnose networking, enable High performance, clear DNS and check/repair files. High performance may increase power use and heat. Repairs require administrator approval and may take time. If a restart is pending, repair will be skipped and flagged. No settings windows will open.|Se medirá antes/después, se diagnosticará la red, se activará Alto rendimiento, se limpiará DNS y se comprobarán/repararán archivos. Alto rendimiento puede aumentar consumo y calor. Las reparaciones requieren administrador y pueden tardar. Si hay un reinicio pendiente, la reparación se omitirá y se indicará. No se abrirán ventanas de configuración.
+Reinicie o Windows para concluir o reparo pendente antes de executar DISM/SFC.|Restart Windows to finish the pending repair before running DISM/SFC.|Reinicie Windows para completar la reparación pendiente antes de ejecutar DISM/SFC.
 REVISÃO DA AÇÃO|ACTION REVIEW|REVISIÓN DE LA ACCIÓN
 FERRAMENTAS|TOOLS|HERRAMIENTAS
 Diagnóstico e reparos disponíveis neste aplicativo|Diagnostics and repairs available in this app|Diagnóstico y reparaciones disponibles en esta aplicación

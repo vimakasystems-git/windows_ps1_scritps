@@ -4,7 +4,7 @@ let language='pt-BR';
 try {const saved=localStorage.getItem('vimaka-language');language=locales.includes(saved)?saved:navigator.language.startsWith('en')?'en':navigator.language.startsWith('es')?'es':'pt-BR';} catch {}
 export const locale=()=>language;
 const dictionary=new Map(rows.map(row=>[row[0],row]));
-const pattern=new RegExp([...dictionary.keys()].sort((a,b)=>b.length-a.length).map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+const pattern=new RegExp('(?<![\\p{L}\\p{N}])(?:'+[...dictionary.keys()].sort((a,b)=>b.length-a.length).map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')(?![\\p{L}\\p{N}])','gu');
 export function t(value){
  const text=String(value??'');if(language==='pt-BR')return text;
  const index=language==='en'?1:2;
