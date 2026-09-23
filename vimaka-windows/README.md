@@ -1,10 +1,10 @@
-# Vimaka Windows Care 0.1.7
+# Vimaka Windows Care 0.1.8
 
 Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo do Windows. Versao de avaliacao; nao e uma garantia de ganho de desempenho .
 
 ## Instalar e abrir
 
-Execute `build/VimakaWindowsCare-Setup-0.1.7.exe`. O nome inclui automaticamente a versao de `package.json` nas proximas compilacoes. Instala por usuario em `%LOCALAPPDATA%\VimakaWindowsCare\app`, cria atalhos na area de trabalho/menu Iniciar e registra inicializacao automatica do componente local, sem elevacao. Nenhum tuning ou reparo e executado na instalacao.
+Execute `build/VimakaWindowsCare-Setup-0.1.8.exe`. O nome inclui automaticamente a versao de `package.json` nas proximas compilacoes. Instala por usuario em `%LOCALAPPDATA%\VimakaWindowsCare\app`, cria atalhos na area de trabalho/menu Iniciar e registra inicializacao automatica do componente local, sem elevacao. Nenhum tuning ou reparo e executado na instalacao.
 
 O executavel abre uma janela do Edge em `http://127.0.0.1:47831`. A interface tambem pode ser instalada como PWA pelo navegador. A PWA precisa do componente local para diagnosticar e executar ferramentas; o cache offline inclui apenas a interface, nunca os diagnosticos. O instalador e o launcher desta versao nao possuem assinatura digital de distribuicao. Nao contorne bloqueios de seguranca do Windows; para distribuicao ampla, assine e valide os binarios em maquinas limpas.
 
@@ -91,3 +91,11 @@ O protocolo vimaka-micro-v1 mede SHA-256 em uma thread (mediana de três amostra
 A comparação opcional aceita pontuação Geekbench 7 CPU Single-Core informada pelo usuário. Exibe a posição entre seis CPUs selecionadas da tabela oficial, com fonte e data em benchmark-references.json. Não verifica o resultado informado, não executa nem publica Geekbench automaticamente, e não mistura as pontuações com o microteste local. Não é ranking mundial ou de computadores completos.
 
 Validação: nove testes automatizados; diagnóstico e melhoria executados localmente. Nesta máquina o reparo foi corretamente ignorado por reinício pendente; verificação de integridade, DNS, energia, inventário e medições concluíram. A medição após o fluxo foi inferior à anterior, mostrando a variação real sem mascará-la.
+
+## Dashboard visual e análise de espaço (0.1.8)
+
+A visão geral destaca o próximo cuidado, memória em uso, inicialização e barras de ocupação das unidades. Configuração e benchmark ficam em uma seção expansível. Não há nota artificial de saúde.
+
+Espaço em disco permite analisar a pasta pessoal ou uma unidade local fixa. Lê apenas metadados, sem abrir conteúdos, apagar arquivos, desinstalar programas ou pedir administrador. Guarda localmente os 50 maiores arquivos e pastas encontrados. Resultados podem ser filtrados por nome/caminho. Mostra contagem durante a busca, permite interromper e sinaliza resultados parciais. Limites: dois minutos, 150 mil entradas e profundidade 100. Links/junções não são percorridos; itens sem acesso são ignorados.
+
+Tamanhos são lógicos, não espaço físico recuperável. Arquivos compactados, esparsos, links físicos e arquivos de nuvem podem diferir do espaço efetivamente ocupado. Pastas incluem descendentes e seus totais se sobrepõem. A lista de programas vem do registro de desinstalação e usa EstimatedSize, quando disponível; não mede as pastas dos aplicativos nem garante cobertura de todos os apps da Store. A interface exibe até 50 correspondências por lista; o filtro de programas pesquisa todas as entradas coletadas. Não use estas listas como indicação de que um arquivo pode ser excluído.

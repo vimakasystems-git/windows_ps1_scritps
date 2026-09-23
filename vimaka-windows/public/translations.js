@@ -1,5 +1,62 @@
 // Application copy only. Commands, diagnostic evidence and user input stay original.
 export const rows = `
+Espaço em disco|Disk space|Espacio en disco
+Seu computador, bem cuidado.|A little care for your computer.|Cuida de tu computadora.
+SEU PRÓXIMO PASSO|YOUR NEXT STEP|TU PRÓXIMO PASO
+Vamos conhecer seu PC|Let's get to know your PC|Conozcamos tu PC
+Execute o diagnóstico para ver os dados reais do computador.|Run diagnostics to see actual computer data.|Ejecuta el diagnóstico para ver los datos reales.
+Mais espaço para o que importa.|More room for what matters.|Más espacio para lo que importa.
+Encontre arquivos grandes, pastas e programas que ocupam seu disco.|Find large files, folders and programs using your disk.|Encuentra archivos grandes, carpetas y programas que ocupan tu disco.
+Analisar espaço →|Analyze space →|Analizar espacio →
+Seu armazenamento|Your storage|Tu almacenamiento
+Ver o que ocupa espaço →|See what's taking up space →|Ver qué ocupa espacio →
+Execute o diagnóstico para ver suas unidades.|Run diagnostics to see your drives.|Ejecuta el diagnóstico para ver tus unidades.
+Conheça a configuração e os testes do seu PC|Explore your PC configuration and tests|Consulta la configuración y las pruebas de tu PC
+ESPAÇO PARA O QUE IMPORTA|ROOM FOR WHAT MATTERS|ESPACIO PARA LO QUE IMPORTA
+O que está ocupando seu disco?|What's taking up your disk?|¿Qué está ocupando tu disco?
+Encontre os maiores itens antes de decidir o que manter.|Find the largest items before deciding what to keep.|Encuentra los elementos más grandes antes de decidir qué conservar.
+Onde procurar|Where to look|Dónde buscar
+Meus arquivos|My files|Mis archivos
+Buscar arquivos grandes|Find large files|Buscar archivos grandes
+Interromper análise|Stop analysis|Detener análisis
+Somente leitura. Nenhum arquivo é apagado e nenhum programa é desinstalado.|Read only. No files are deleted and no programs are uninstalled.|Solo lectura. No se eliminan archivos ni se desinstalan programas.
+Até 2 minutos ou 150 mil itens por análise. Links e pastas sem acesso são ignorados. A leitura usa metadados, sem abrir o conteúdo dos arquivos.|Up to 2 minutes or 150,000 entries per scan. Links and inaccessible folders are skipped. Only metadata is read, never file contents.|Hasta 2 minutos o 150 mil elementos por análisis. Se omiten enlaces y carpetas sin acceso. Solo se leen metadatos, no el contenido.
+Filtrar resultados|Filter results|Filtrar resultados
+Nome ou caminho|Name or path|Nombre o ruta
+Resultado parcial: a busca foi interrompida, atingiu o limite ou encontrou pastas sem acesso. Os maiores itens são os encontrados nesta busca.|Partial results: the scan stopped, reached its limit or encountered inaccessible folders. Largest items refer to this scan only.|Resultados parciales: el análisis se detuvo, alcanzó el límite o encontró carpetas sin acceso. Los mayores elementos son los encontrados en esta búsqueda.
+Arquivos grandes|Large files|Archivos grandes
+Até 50 arquivos, do maior para o menor.|Up to 50 files, largest first.|Hasta 50 archivos, de mayor a menor.
+Pastas que mais ocupam espaço|Largest folders|Carpetas más grandes
+Inclui subpastas. Os tamanhos podem se sobrepor.|Includes subfolders. Sizes may overlap.|Incluye subcarpetas. Los tamaños pueden superponerse.
+Programas instalados|Installed programs|Programas instalados
+Todos os programas registrados, independentemente da pasta escolhida. Tamanhos estimados informados pelos instaladores; alguns não informam tamanho. A lista pode não incluir todos os apps da Store.|Registered programs regardless of the selected folder. Sizes are installer estimates; some are unknown. The list may not include every Store app.|Programas registrados independientemente de la carpeta elegida. Los tamaños son estimaciones; algunos se desconocen. Puede que no se incluyan todas las apps de Store.
+Pouco espaço disponível|Low disk space|Poco espacio disponible
+Diagnóstico disponível|Diagnostics available|Diagnóstico disponible
+Salve seu trabalho e reinicie o Windows para concluir as alterações pendentes.|Save your work and restart Windows to complete pending changes.|Guarda tu trabajo y reinicia Windows para completar los cambios pendientes.
+Veja o que ocupa espaço antes de escolher o que remover.|See what's taking up space before choosing what to remove.|Mira qué ocupa espacio antes de elegir qué quitar.
+Veja os dados do seu computador e escolha o próximo cuidado.|Review your computer data and choose the next step.|Revisa los datos de tu computadora y elige el siguiente paso.
+Última leitura|Last reading|Última lectura
+Memória em uso|Memory in use|Memoria en uso
+Varia conforme os aplicativos abertos.|Varies with open applications.|Varía con las aplicaciones abiertas.
+Ao ligar o computador|When your computer starts|Al iniciar la computadora
+aplicativos|apps|aplicaciones
+Revise a inicialização nas ferramentas.|Review startup apps in Tools.|Revisa el inicio en Herramientas.
+Seu computador|Your computer|Tu computadora
+livres|free|libres
+utilizados|used|utilizados
+Nenhuma unidade disponível.|No drives available.|No hay unidades disponibles.
+Interrompendo…|Stopping…|Deteniendo…
+Buscando arquivos e pastas|Scanning files and folders|Buscando archivos y carpetas
+arquivos encontrados|files found|archivos encontrados
+itens ignorados|items skipped|elementos omitidos
+Análise parcial|Partial analysis|Análisis parcial
+Análise concluída|Analysis complete|Análisis completado
+Análise em andamento|Analysis in progress|Análisis en curso
+Escolha onde procurar e inicie a análise.|Choose where to look and start the scan.|Elige dónde buscar e inicia el análisis.
+Tamanho lógico dos arquivos encontrados. Pastas se sobrepõem; não some seus tamanhos.|Logical sizes of files found. Folders overlap; do not add their sizes.|Tamaño lógico de los archivos encontrados. Las carpetas se superponen; no sumes sus tamaños.
+Nenhum resultado nesta lista.|No results in this list.|No hay resultados en esta lista.
+Não informado|Not reported|No informado
+
 Comparação desta execução. Variações de carga e temperatura afetam as leituras.|Comparison for this run. Workload and temperature changes affect readings.|Comparación de esta ejecución. Las variaciones de carga y temperatura afectan las lecturas.
 
 Janela de configuração|Settings window|Ventana de configuración

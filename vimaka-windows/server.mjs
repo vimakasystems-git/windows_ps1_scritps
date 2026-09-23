@@ -1,3 +1,4 @@
+import {scanStorage} from './storage.mjs';
 import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -13,6 +14,8 @@ const data=process.env.VIMAKA_DATA || path.join(process.env.LOCALAPPDATA||os.hom
 const port=Number(process.env.VIMAKA_PORT||47831), origin=`http://127.0.0.1:${port}`;
 const ps=path.join(process.env.WINDIR||'C:\\Windows','System32','WindowsPowerShell','v1.0','powershell.exe');
 await fs.mkdir(data,{recursive:true});
+let storageInfo;
+async function getStorageInfo(){storageInfo??=JSON.parse((await runPS('StorageInfo.ps1',[],undefined,30000)).replace(/^\uFEFF/,''));return storageInfo;}
 const jobs=new Map(), csrf=crypto.randomBytes(32).toString('hex');
 const jsonRead=async(file,fallback)=>{try{return JSON.parse((await fs.readFile(file,'utf8')).replace(/^\uFEFF/,''));}catch{return fallback;}};
 async function persist(){await fs.writeFile(path.join(data,'history.json'),JSON.stringify([...jobs.values()].slice(-100),null,2));}
@@ -80,12 +83,19 @@ const server=http.createServer(async(req,res)=>{
     if(req.headers.origin && req.headers.origin!==origin)return send(res,403,{error:'Origem não autorizada.'});
     if(req.headers['sec-fetch-site']==='cross-site')return send(res,403,{error:'Acesso externo não permitido.'});
     const url=new URL(req.url,origin);
-    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.1.7',local:true});
+    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.1.8',local:true});
     if(url.pathname.startsWith('/api/')&&req.method!=='GET'){
       if(req.headers.origin!==origin||req.headers['x-vimaka-token']!==csrf||!req.headers['content-type']?.startsWith('application/json'))return send(res,403,{error:'Sessão local inválida. Reabra o aplicativo.'});
     }
     if(req.method==='GET'&&url.pathname==='/api/state'){
-      return send(res,200,{comparison:await jsonRead(path.join(data,'comparison.json'),{}),actions,jobs:[...jobs.values()].reverse().slice(0,100)});
+      return send(res,200,{comparison:await jsonRead(path.join(data,'comparison.json'),{}),storage:await jsonRead(path.join(data,'storage.json'),null),actions,jobs:[...jobs.values()].reverse().slice(0,100)});
+    }
+
+    if(req.method==='GET'&&url.pathname==='/api/storage/options'){const info=await getStorageInfo();return send(res,200,{roots:[{id:'profile',label:'Meus arquivos'},...info.roots]});}
+    if(req.method==='POST'&&url.pathname==='/api/storage/cancel'){const b=await body(req);const job=jobs.get(b.id);if(!job||job.kind!=='storage'||job.status!=='running')throw Error('Nenhuma análise em execução.');job.cancelRequested=true;return send(res,200,{ok:true});}
+    if(req.method==='POST'&&url.pathname==='/api/storage/scan'){
+      const b=await body(req),info=await getStorageInfo();const root=b.root==='profile'?os.homedir():info.roots.find(r=>r.id===b.root)?.id;if(!root)throw Error('Selecione uma unidade local válida.');
+      return send(res,202,newJob('Analisar espaço',async job=>{job.kind='storage';job.currentStep='Buscando arquivos e pastas';const result=await scanStorage(root,{cancelled:()=>job.cancelRequested,onProgress:p=>{job.storageProgress=p;job.log=p.fileCount+' arquivos · '+p.skipped+' itens ignorados';}});result.programs=info.programs;job.hasWarnings=result.partial;job.currentStep=result.partial?'Análise parcial':'Análise concluída';job.log=result.fileCount+' arquivos · '+result.skipped+' itens ignorados';await fs.writeFile(path.join(data,'storage.json'),JSON.stringify(result));}));
     }
     if(req.method==='POST'&&url.pathname==='/api/scan')return send(res,202,workflow('diagnostic'));
     if(req.method==='POST'&&url.pathname==='/api/workflow'){const b=await body(req);if(b.mode==='performance'&&b.confirm!==true)throw Error('Revise e confirme a ação.');return send(res,202,workflow(b.mode));}
