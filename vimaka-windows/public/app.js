@@ -1,19 +1,23 @@
+import {renderResultsDashboard} from './result-dashboard.js';
 import {setupVisual,renderVisual} from './visual-dashboard.js';
 import {setupDashboard,renderDashboard} from './dashboard.js';
 import {t,locale,translatePage} from './i18n.js';
 import './donation.js';
 const $=id=>document.getElementById(id);
-let csrf='',state={},installPrompt=null;
+let csrf='',state={},installPrompt=null,watchedJob=null;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const format=n=>Number.isFinite(Number(n))?Number(n).toLocaleString(locale(),{maximumFractionDigits:2}):'Não medido';
 function notice(text,error=false){$('notice').textContent=text;$('notice').classList.toggle('error',error);}
-async function api(route,data){const r=await fetch('/api/'+route,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json','X-Vimaka-Token':csrf},body:JSON.stringify(data)});const value=await r.json();if(!r.ok)throw Error(value.error||'Falha de conexão');return value;}
+async function api(route,data){const r=await fetch('/api/'+route,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json','X-Vimaka-Token':csrf},body:JSON.stringify(data)});const value=await r.json();if(!r.ok)throw Error(value.error||'Falha de conexão');if(['scan','workflow'].includes(route)){watchedJob=value.id;notice('Em execução');}return value;}
 const pageNames={benchmark:'Benchmark',space:'Espaço em disco',overview:'Visão geral',tools:'Diagnóstico e reparos',cerebro:'Cérebro Brasil',ecosystem:'Ecossistema Vimaka',history:'Histórico',donation:'Apoie o desenvolvedor'};
 function showPage(name){if(!Object.hasOwn(pageNames,name))name='overview';document.querySelectorAll('.page').forEach(x=>x.hidden=x.id!==name);document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===name));$('breadcrumb').textContent='Meu computador / '+pageNames[name];location.hash=name;}
 document.querySelectorAll('[data-page],[data-go]').forEach(b=>b.onclick=()=>showPage(b.dataset.page||b.dataset.go));
 function confirmAction(title,detail,admin=false){$('confirm-title').textContent=title;$('confirm-detail').textContent=detail;$('confirm-admin').textContent=admin?'Esta ação exige administrador. O Windows solicitará autorização ou login de uma conta administradora. Se você não possui essas credenciais, cancele e procure o administrador da máquina.':'A execução ficará registrada no histórico local.';const d=$('confirm');d.returnValue='cancel';d.showModal();return new Promise(resolve=>d.addEventListener('close',()=>resolve(d.returnValue==='ok'),{once:true}));}
 function render(){
- renderDashboard(state);renderVisual(state);
+ const finished=state.jobs?.find(j=>j.id===watchedJob&&j.status!=='running');
+ if(finished){watchedJob=null;showPage(finished.mode==='benchmark'?'benchmark':'overview');notice('Execução encerrada. Veja o dashboard de resultados.');requestAnimationFrame(()=>document.getElementById(finished.mode==='performance'?'performance-result':finished.mode==='diagnostic'?'diagnosis-result':'benchmark')?.scrollIntoView({behavior:'smooth',block:'start'}));}
+
+ renderDashboard(state);renderVisual(state);renderResultsDashboard(state);
  const before=state.comparison?.before,current=state.comparison?.current;
  if(current){
   $('stats').innerHTML=[['INICIALIZAÇÃO',`${current.startup.length} entradas`,'Programas registrados para iniciar com o Windows'],['MEMÓRIA LIVRE',`${format(current.freeGB)} GB`,`de ${format(current.totalGB)} GB · varia com os aplicativos abertos`],['FERRAMENTAS',Object.keys(state.actions||{}).length,'Diagnóstico e reparos disponíveis neste aplicativo']].map(([a,b,c])=>`<article class="stat"><small>${a}</small><strong>${esc(b)}</strong><p>${esc(c)}</p></article>`).join('');

@@ -1,5 +1,17 @@
 // Application copy only. Commands, diagnostic evidence and user input stay original.
 export const rows = `
+Resultado do diagnóstico|Diagnosis results|Resultados del diagnóstico
+Diagnóstico com etapas incompletas. Consulte o histórico.|Diagnosis has incomplete steps. See history.|El diagnóstico tiene pasos incompletos. Consulta el historial.
+Diagnóstico concluído. Estas são as medições do seu PC.|Diagnosis completed. These are your PC measurements.|Diagnóstico completado. Estas son las mediciones de tu PC.
+Resultado da melhoria: antes e depois|Performance results: before and after|Resultados de mejora: antes y después
+Medições da mesma execução no Windows. Barras maiores indicam maior taxa neste microteste.|Measurements from the same Windows run. Longer bars indicate higher throughput in this microtest.|Mediciones de la misma ejecución en Windows. Las barras más largas indican mayor rendimiento en esta microprueba.
+Depois|After|Después
+Comparação indisponível|Comparison unavailable|Comparación no disponible
+Mudanças de carga e temperatura influenciam os resultados. Valores negativos também são exibidos; não há garantia de aceleração.|Workload and temperature affect results. Negative changes are also shown; no speedup is guaranteed.|La carga y temperatura afectan los resultados. También se muestran variaciones negativas; no se garantiza aceleración.
+Execute o diagnóstico para gerar este dashboard.|Run diagnostics to generate this dashboard.|Ejecuta el diagnóstico para generar este panel.
+Use Melhorar desempenho para medir antes, aplicar os ajustes e medir novamente.|Use Improve performance to measure before, apply adjustments and measure again.|Usa Mejorar rendimiento para medir antes, aplicar ajustes y volver a medir.
+Execução encerrada. Veja o dashboard de resultados.|Run finished. See the results dashboard.|Ejecución finalizada. Consulta el panel de resultados.
+
 COMPARAÇÃO OPCIONAL|OPTIONAL COMPARISON|COMPARACIÓN OPCIONAL
 Comparar com Geekbench|Compare with Geekbench|Comparar con Geekbench
 Execute o Geekbench 7 CPU no seu computador.|Run Geekbench 7 CPU on your computer.|Ejecuta Geekbench 7 CPU en tu computadora.
