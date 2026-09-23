@@ -8,6 +8,7 @@ export function setupUpdate({api,refresh,notice}){
 export function renderUpdate(state){
  const job=state.jobs?.find(j=>j.kind==='update');if(!job)return;
  const status=document.getElementById('update-status'),install=document.getElementById('install-update');
+ install.hidden=job.status!=='success';
  if(job.status==='running')status.textContent=`${t('Baixando e verificando o instalador…')} ${job.progress||0}%`;
  if(job.status==='failed')status.textContent=job.log;
  if(job.status==='success'&&job.update){install.dataset.id=job.update.id;install.hidden=false;}

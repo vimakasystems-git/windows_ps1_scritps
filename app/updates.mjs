@@ -36,6 +36,7 @@ export function createUpdater({current,data,platform=process.platform,arch=proce
   const distro=platform==='linux'?await fs.readFile('/etc/os-release','utf8').catch(()=>''):'';
   const target=targetFor(platform,arch,distro);
   const r=await fetch(`https://api.github.com/repos/${repository}/releases/latest`,{headers:{Accept:'application/vnd.github+json','User-Agent':'VimakaWorkstationCare'},signal:AbortSignal.timeout(15000)});
+  if(r.status===404)return {available:false,current,version:current,page:`https://github.com/${repository}/releases`};
   if(!r.ok)throw Error(`GitHub indisponível (${r.status}). Tente novamente mais tarde.`);
   return selectRelease(await r.json(),current,target);
  }
@@ -58,7 +59,7 @@ export function createUpdater({current,data,platform=process.platform,arch=proce
   if(createHash('sha256').update(await fs.readFile(entry.file)).digest('hex')!==entry.sha256)throw Error('Instalador foi alterado. Baixe novamente.');
   const file=platform==='win32'?entry.file:platform==='darwin'?'/usr/bin/open':'xdg-open';
   const args=platform==='win32'?[]:[entry.file];
-  await new Promise((resolve,reject)=>{const child=spawn(file,args,{detached:true,stdio:'ignore',windowsHide:true});child.once('error',reject);child.once('spawn',()=>{child.unref();resolve();});});
+  await new Promise((resolve,reject)=>{const child=spawn(file,args,{detached:platform==='win32',stdio:'ignore',windowsHide:true});child.once('error',reject);if(platform==='win32')child.once('spawn',()=>{child.unref();resolve();});else child.once('close',code=>code===0?resolve():reject(Error('Abra o pacote pelo gerenciador de arquivos: '+entry.file)));});
   return {opened:true};
  }
  return {check,download,open};
