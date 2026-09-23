@@ -1,4 +1,8 @@
-# Vimaka Windows Care 0.1.11
+# Vimaka Care
+
+A edição Windows publicada continua na 0.1.11. A versão 0.2.0 do código introduz uma **prévia portátil Linux/macOS**, sem reparos automáticos nesses sistemas. Consulte [instruções e limitações](PORTABLE.md).
+
+## Windows 0.1.11
 
 Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo do Windows. Versao de avaliacao; nao e uma garantia de ganho de desempenho .
 

@@ -7,7 +7,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 test('portable diagnostic generates a measured report and rejects Windows tuning', {skip:process.platform==='win32',timeout:90000}, async()=>{
  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'vimaka-portable-'));
- const server=spawn(process.execPath,['server.mjs'],{cwd:fileURLToPath(new URL('../',import.meta.url)),env:{...process.env,VIMAKA_PORT:'47840',VIMAKA_DATA:dir}});
+ const server=spawn(process.execPath,['server.mjs'],{cwd:process.env.VIMAKA_TEST_APP_DIR||fileURLToPath(new URL('../',import.meta.url)),env:{...process.env,VIMAKA_PORT:'47840',VIMAKA_DATA:dir}});
  let output='';server.stderr.on('data',c=>output+=c);
  try{
   await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);server.once('exit',c=>reject(Error(output+' Exit '+c)));});

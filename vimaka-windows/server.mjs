@@ -124,7 +124,8 @@ const server=http.createServer(async(req,res)=>{
     if(rel.includes('\\'))return send(res,403,{error:'Caminho inválido.'});
     const root=path.join(here,'public'),file=path.resolve(root,rel);
     if(!file.startsWith(root+path.sep))return send(res,403,{error:'Caminho inválido.'});
-    const content=await fs.readFile(file).catch(()=>null);if(!content)return send(res,404,{error:'Arquivo inexistente.'});
+    let content=await fs.readFile(file).catch(()=>null);if(!content)return send(res,404,{error:'Arquivo inexistente.'});
+    if(!isWindows&&rel==='manifest.webmanifest'){const manifest=JSON.parse(content.toString());manifest.name='Vimaka '+systemName+' Care';manifest.short_name='Vimaka Care';manifest.description='Local diagnostics, benchmark and storage analysis — preview';content=Buffer.from(JSON.stringify(manifest));}
     const type={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webmanifest':'application/manifest+json','.png':'image/png','.svg':'image/svg+xml','.ttf':'font/ttf','.ico':'image/x-icon'}[path.extname(file)]||'application/octet-stream';
     res.writeHead(200,{'Content-Type':type,'Cache-Control':'no-cache'});res.end(content);
   }catch(e){send(res,400,{error:e.message});}

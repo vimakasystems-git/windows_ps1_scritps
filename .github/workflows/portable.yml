@@ -26,6 +26,12 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: sh -n Start-Vimaka.command
+      - name: Test extracted portable package
+        run: |
+          python3 build-portable.py
+          mkdir build-portable/extracted
+          tar -xzf build-portable/VimakaCare-Linux-0.2.0-preview.tar.gz -C build-portable/extracted
+          VIMAKA_TEST_APP_DIR="$PWD/build-portable/extracted/VimakaCare-Linux-0.2.0-preview" node --test tests/portable.test.mjs
   fedora:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
