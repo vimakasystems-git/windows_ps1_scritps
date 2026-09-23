@@ -1,4 +1,4 @@
-# Vimaka Windows Care 0.1.0
+# Vimaka Windows Care 0.1.1
 
 Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo e laboratorio Windows Sandbox. Versao de avaliacao; nao e uma garantia de ganho de desempenho nem uma plataforma universal para executar qualquer programa Windows.
 
@@ -38,7 +38,7 @@ Habilitar Sandbox requer Windows Pro/Enterprise/Education compativel e virtualiz
 
 Servidor sem privilegios, apenas em 127.0.0.1. Host/origem validados, sem CORS, token de sessao para mutacoes, catalogo fechado de acoes nativas, sem endpoint generico de shell no host. Processos usam argumentos separados. Nenhuma credencial de nuvem e necessaria. Diagnosticos, logs e roteiros ficam em `%LOCALAPPDATA%\VimakaWindowsCare\data`; nao publique esse diretorio.
 
-O catalogo inclui 27 links copiados de https://vimakasistemas.com.br/ecosistema. Os links abrem os servicos oficiais; as funcionalidades desses servicos nao fazem parte do aplicativo local. O logotipo foi obtido do favicon oficial do site Vimaka. Os icones PWA sao variantes dimensionadas desse ativo.
+O catalogo inclui 27 links copiados de https://vimakasistemas.com.br/ecosistema. Os links abrem os servicos oficiais; as funcionalidades desses servicos nao fazem parte do aplicativo local. O logotipo e o arquivo fornecido pelo usuario. Os icones usam o simbolo V extraido desse mesmo ativo, sem redesenho. A identidade segue vimaka.com (redireciona ao site oficial): branco #FDFDFD, texto #0F1729, azul #0059FF e fontes Inter, Space Grotesk e JetBrains Mono. As fontes ficam locais, com licencas OFL em public/fonts.
 
 ## Desinstalar
 

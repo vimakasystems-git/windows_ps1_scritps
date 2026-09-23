@@ -46,7 +46,7 @@ const server=http.createServer(async(req,res)=>{
     if(req.headers.origin && req.headers.origin!==origin)return send(res,403,{error:'Origem não autorizada.'});
     if(req.headers['sec-fetch-site']==='cross-site')return send(res,403,{error:'Acesso externo não permitido.'});
     const url=new URL(req.url,origin);
-    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.1.0',local:true});
+    if(req.method==='GET'&&url.pathname==='/api/session')return send(res,200,{csrf,version:'0.1.1',local:true});
     if(url.pathname.startsWith('/api/')&&req.method!=='GET'){
       if(req.headers.origin!==origin||req.headers['x-vimaka-token']!==csrf||!req.headers['content-type']?.startsWith('application/json'))return send(res,403,{error:'Sessão local inválida. Reabra o aplicativo.'});
     }
@@ -109,7 +109,7 @@ const server=http.createServer(async(req,res)=>{
     const root=path.join(here,'public'),file=path.resolve(root,rel);
     if(!file.startsWith(root+path.sep))return send(res,403,{error:'Caminho inválido.'});
     const content=await fs.readFile(file).catch(()=>null);if(!content)return send(res,404,{error:'Arquivo inexistente.'});
-    const type={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webmanifest':'application/manifest+json','.png':'image/png','.svg':'image/svg+xml'}[path.extname(file)]||'application/octet-stream';
+    const type={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webmanifest':'application/manifest+json','.png':'image/png','.svg':'image/svg+xml','.ttf':'font/ttf','.ico':'image/x-icon'}[path.extname(file)]||'application/octet-stream';
     res.writeHead(200,{'Content-Type':type,'Cache-Control':'no-cache'});res.end(content);
   }catch(e){send(res,400,{error:e.message});}
 });

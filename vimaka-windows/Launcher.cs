@@ -34,7 +34,7 @@ class Launcher {
     PowerShell(script);
     using(var key=Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run"))key.SetValue("VimakaWindowsCare","\""+exe+"\" --background");
     using(var key=Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\VimakaWindowsCare")){
-     key.SetValue("DisplayName","Vimaka Windows Care");key.SetValue("DisplayVersion","0.1.0");key.SetValue("Publisher","Vimaka Sistemas Inteligentes");
+     key.SetValue("DisplayName","Vimaka Windows Care");key.SetValue("DisplayVersion","0.1.1");key.SetValue("Publisher","Vimaka Sistemas Inteligentes");
      key.SetValue("InstallLocation",AppDir);key.SetValue("DisplayIcon",exe);
      key.SetValue("UninstallString","powershell.exe -NoProfile -ExecutionPolicy Bypass -File \""+Path.Combine(AppDir,"native","Uninstall.ps1")+"\"");
     }
