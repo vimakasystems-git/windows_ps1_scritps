@@ -1,6 +1,6 @@
-# Vimaka Windows Care 0.1.3
+# Vimaka Windows Care 0.1.4
 
-Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo e laboratorio Windows Sandbox. Versao de avaliacao; nao e uma garantia de ganho de desempenho nem uma plataforma universal para executar qualquer programa Windows.
+Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo do Windows. Versao de avaliacao; nao e uma garantia de ganho de desempenho .
 
 ## Instalar e abrir
 
@@ -27,13 +27,11 @@ A primeira leitura e a referencia. Atualizar diagnostico preserva essa referenci
 
 Ferramentas: diagnostico de rede, DISM CheckHealth, DISM RestoreHealth seguido de SFC, cache DNS, configuracoes de armazenamento/inicializacao/atualizacoes/som/impressoras, Monitor de Confiabilidade e plano de energia reversivel. Reparos exigem revisao na interface e elevacao quando necessario. O historico distingue falha, conclusao e interrupcao. Operacoes administrativas podem demorar; nao desligue o computador durante reparos.
 
-## Cerebro Brasil e sandbox
+## Cerebro Brasil
 
-O site oficial bloqueia iframes (`X-Frame-Options: DENY`). O app abre uma janela propria do site. Copie a resposta do chat e cole no laboratorio; o app extrai blocos PowerShell para revisao. Nao ha API autenticada de conversas integrada, captura silenciosa de chats ou execucao automatica de respostas na maquina principal.
+Abre o site em uma janela propria para consultar orientacoes. O aplicativo nao le conversas privadas nem importa ou executa comandos do chat. Use as ferramentas fixas de diagnostico e reparo apos revisar sua descricao.
 
-O roteiro so e executado no Windows Sandbox depois de revisao, confirmacao e verificacao de hash. Compartilha apenas a pasta do teste em modo somente leitura. Rede, camera, microfone, impressoras, clipboard e vGPU ficam desabilitados por padrao. A rede e opcional e tambem permite acessar a rede local. Nao se compartilham pastas de documentos do usuario. Downloads escolhidos no catalogo WinGet sao copiados para `packages` na sandbox, onde o usuario pode abrir os instaladores.
-
-Habilitar Sandbox requer Windows Pro/Enterprise/Education compativel e virtualizacao. Pode exigir reboot; o app nao reinicia automaticamente. Windows Home, ARM e programas com requisitos especiais nao foram validados. A existencia do executavel Sandbox nao prova que a virtualizacao funciona. O status de abertura significa somente que o Windows recebeu a solicitacao; confira o resultado dentro da sandbox. O log interno e descartado ao fecha-la. A sandbox nao atesta que o programa e seguro nem cobre drivers, firmware, todo malware ou qualquer carga de trabalho.
+O laboratorio, a execucao de scripts e o download de pacotes foram retirados deste produto na versao 0.1.4. Historicos e arquivos anteriores sao preservados; o recurso opcional Windows Sandbox ja habilitado no sistema nao e alterado por esta atualizacao.
 
 ## Seguranca e privacidade
 
@@ -52,9 +50,6 @@ Use Aplicativos instalados no Windows ou execute `native/Uninstall.ps1` da pasta
 - https://support.microsoft.com/en-us/windows/experience/storage-filemanagement/free-up-drive-space-in-windows
 - https://support.microsoft.com/en-us/windows/hardware/audio/fix-sound-or-audio-problems-in-windows
 - https://support.microsoft.com/en-us/windows/experience/backup-recovery/using-system-file-checker-in-windows
-- https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-install
-- https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-configure-using-wsb-file
-- https://learn.microsoft.com/en-us/windows/package-manager/winget/download
 
 As categorias foram escolhidas a partir dos guias de problemas recorrentes da Microsoft, nao de um ranking estatistico de frequencia.
 

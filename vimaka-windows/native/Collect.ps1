@@ -12,5 +12,4 @@ $services=@(Get-CimInstance Win32_Service | Where-Object {$_.Name -eq 'RemojoBlo
  remojo=$services.Count;power=$power;drives=$drives
  network=@(Get-NetAdapter | Select-Object Name,Status,LinkSpeed)
  processes=@(Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object -First 8 Name,@{n='memoryMB';e={[math]::Round($_.WorkingSet64/1MB)}})
- hypervisor=$pc.HypervisorPresent;sandboxPresent=(Test-Path "$env:WINDIR\System32\WindowsSandbox.exe")
 } | ConvertTo-Json -Depth 5

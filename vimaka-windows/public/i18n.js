@@ -16,9 +16,7 @@ export function t(value){
  .replace(/versão de avaliação/g,language==='en'?'evaluation version':'versión de evaluación')
  .replace(/São Paulo · Brasil/g,language==='en'?'São Paulo · Brazil':'São Paulo · Brasil')
  .replace(/^Baixar /,language==='en'?'Download ':'Descargar ')
- .replace(/Abra o executável Vimaka Windows Care para reconectar\./g,language==='en'?'Open Vimaka Windows Care to reconnect.':'Abra Vimaka Windows Care para reconectar.')
- .replace(/Os comandos exibidos serão executados na sandbox\. Rede habilitada, incluindo acesso à rede local\. Os arquivos do teste são descartados ao fechar\./g,language==='en'?'The displayed commands will run in the sandbox. Networking is enabled, including local network access. Test files are discarded when it closes.':'Los comandos mostrados se ejecutarán en el entorno aislado. La red está habilitada, incluido el acceso a la red local. Los archivos se descartan al cerrarlo.')
- .replace(/Os comandos exibidos serão executados na sandbox\. Rede desabilitada\. Os arquivos do teste são descartados ao fechar\./g,language==='en'?'The displayed commands will run in the sandbox. Networking is disabled. Test files are discarded when it closes.':'Los comandos mostrados se ejecutarán en el entorno aislado. La red está deshabilitada. Los archivos se descartan al cerrarlo.');
+ .replace(/Abra o executável Vimaka Windows Care para reconectar\./g,language==='en'?'Open Vimaka Windows Care to reconnect.':'Abra Vimaka Windows Care para reconectar.');
  return result.replace(pattern,key=>dictionary.get(key)[index]);
 }
 const records=new WeakMap();

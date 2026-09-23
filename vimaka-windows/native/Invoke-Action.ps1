@@ -1,7 +1,7 @@
-param([ValidateSet('network','health','repair','dns','storage','startup','updates','audio','printers','reliability','energy','restoreEnergy','sandboxEnable')][string]$Action,[Parameter(Mandatory)][string]$ResultFile,[switch]$Elevated)
+param([ValidateSet('network','health','repair','dns','storage','startup','updates','audio','printers','reliability','energy','restoreEnergy')][string]$Action,[Parameter(Mandatory)][string]$ResultFile,[switch]$Elevated)
 $ErrorActionPreference='Stop'
 [Console]::OutputEncoding=New-Object Text.UTF8Encoding($false)
-$needsAdmin=$Action -in @('health','repair','dns','sandboxEnable')
+$needsAdmin=$Action -in @('health','repair','dns')
 $isAdmin=([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 $result=@{ok=$false;output='';error=$null}
 if($needsAdmin -and !$isAdmin){
@@ -37,11 +37,6 @@ try{
    $save=Join-Path (Split-Path $ResultFile) 'energy-backup.txt'
    $old=(Get-Content $save -Raw).Trim();if($old -notmatch '^[0-9a-fA-F-]{36}$'){throw 'Backup invalido.'}
    Native "$env:WINDIR\System32\powercfg.exe" @('/setactive',$old);'Plano anterior restaurado.'
-  }
-  sandboxEnable {
-   $state=Get-WindowsOptionalFeature -Online -FeatureName 'Containers-DisposableClientVM'
-   if($state.State -eq 'Enabled'){'Windows Sandbox ja habilitado.'}
-   else{$enabled=Enable-WindowsOptionalFeature -Online -FeatureName 'Containers-DisposableClientVM' -All -NoRestart; 'Recurso habilitado. Reinicio necessario: '+$enabled.RestartNeeded}
   }
  }
  $result.output=$result.output | Out-String;$result.ok=$true

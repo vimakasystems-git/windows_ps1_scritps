@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import http from 'node:http';
 import {fileURLToPath} from 'node:url';
-test('API local bloqueia origens externas, ações arbitrárias e roteiros não revisados',async()=>{
+test('API local bloqueia origens externas, ações arbitrárias e endpoints removidos',async()=>{
  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'vimaka-api-test-'));
  const server=spawn(process.execPath,['server.mjs'],{cwd:fileURLToPath(new URL('../',import.meta.url)),env:{...process.env,VIMAKA_PORT:'47839',VIMAKA_DATA:dir},windowsHide:true});
  try{
@@ -19,12 +19,9 @@ test('API local bloqueia origens externas, ações arbitrárias e roteiros não 
   const hostStatus=await new Promise((resolve,reject)=>{http.get(base+'/api/session',{headers:{Host:'attacker.example:47839'}},r=>{r.resume();resolve(r.statusCode);}).once('error',reject);});
   assert.equal(hostStatus,403);
   assert.equal((await post('action',{id:'cmd.exe',confirm:true})).status,400);
-  assert.equal((await post('package',{id:'__proto__',confirm:true})).status,400);
-  assert.equal((await post('sandbox',{id:'not-reviewed',hash:'x',confirm:true,network:false})).status,400);
-  const draft=await(await post('draft',{text:'Write-Output "isolado"'})).json();
-  assert.equal(draft.script,'Write-Output "isolado"');
-  assert.equal((await post('sandbox',{id:draft.id,hash:'changed',confirm:true,network:false})).status,400);
-  const state=await(await fetch(base+'/api/state')).json();assert.equal(state.jobs.length,0);
+  for(const route of ['draft','package','sandbox'])assert.equal((await post(route,{id:'git',text:'Write-Output "test"',confirm:true})).status,404);
+  assert.equal((await post('action',{id:'sandboxEnable',confirm:true})).status,400);
+  const state=await(await fetch(base+'/api/state')).json();assert.equal(state.jobs.length,0);assert.equal(state.actions.sandboxEnable,undefined);assert.equal(state.packages,undefined);assert.equal(state.sandboxPresent,undefined);
   assert.equal((await fetch(base+'/%2e%2e%5cserver.mjs')).status,403);
  }finally{server.kill();/* Temp contains no private data. Retained for diagnostics. */}
 });

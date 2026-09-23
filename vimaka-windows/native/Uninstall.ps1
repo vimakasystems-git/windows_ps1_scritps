@@ -10,4 +10,4 @@ Remove-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\VimakaWin
 foreach($folder in @([Environment]::GetFolderPath('DesktopDirectory'),[Environment]::GetFolderPath('Programs'))){$link=Join-Path $folder 'Vimaka Windows Care.lnk';if(Test-Path -LiteralPath $link){Remove-Item -LiteralPath $link}}
 Remove-Item -LiteralPath $app -Recurse -Force
 Write-Host 'Aplicativo removido. Diagnosticos e historico preservados em:' (Join-Path $root 'data')
-Write-Host 'Ajustes do Windows e o recurso Sandbox nao foram revertidos. A PWA instalada pelo navegador pode ser removida pelo navegador.'
+Write-Host 'Ajustes do Windows nao foram revertidos. A PWA instalada pelo navegador pode ser removida pelo navegador.'

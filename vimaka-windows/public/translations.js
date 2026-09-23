@@ -1,5 +1,13 @@
 // Application copy only. Commands, diagnostic evidence and user input stay original.
 export const rows = `
+REVISÃO DA AÇÃO|ACTION REVIEW|REVISIÓN DE LA ACCIÓN
+FERRAMENTAS|TOOLS|HERRAMIENTAS
+Diagnóstico e reparos disponíveis neste aplicativo|Diagnostics and repairs available in this app|Diagnóstico y reparaciones disponibles en esta aplicación
+Converse sobre o problema e consulte orientações para o seu Windows.|Discuss the problem and consult guidance for your Windows PC.|Converse sobre el problema y consulte orientación para su Windows.
+à solução.|to a solution.|a la solución.
+Entenda antes de agir|Understand before taking action|Entienda antes de actuar
+Consulte o diagnóstico e identifique os sintomas.|Check diagnostics and identify the symptoms.|Consulte el diagnóstico e identifique los síntomas.
+Escolha uma ferramenta de reparo e revise sua descrição.|Choose a repair tool and review its description.|Elija una herramienta de reparación y revise su descripción.
 QR Code Pix para doação de valor livre a Douglas Cardoso|Pix QR code for an open-amount donation to Douglas Cardoso|Código QR Pix para una donación de importe libre a Douglas Cardoso
 Logs e dados do Windows permanecem no idioma de origem.|Windows logs and data remain in their original language.|Los registros y datos de Windows conservan su idioma original.
 Plataforma corporativa|Business platform|Plataforma empresarial
@@ -21,16 +29,13 @@ Sessão local inválida. Reabra o aplicativo.|Invalid local session. Reopen the 
 Revise e confirme a ação.|Review and confirm the action.|Revise y confirme la acción.
 Nenhum resultado recebido.|No result received.|No se recibió ningún resultado.
 Ação falhou.|Action failed.|La acción falló.
-Revise novamente o roteiro antes de executar.|Review the script again before running it.|Revise de nuevo el script antes de ejecutarlo.
 Defina explicitamente o acesso à rede.|Explicitly choose network access.|Elija explícitamente el acceso a la red.
-Windows Sandbox indisponível. Habilite o recurso e reinicie quando solicitado.|Windows Sandbox unavailable. Enable it and restart when requested.|Windows Sandbox no disponible. Habilítelo y reinicie cuando se solicite.
 Confirme o download.|Confirm the download.|Confirme la descarga.
 Conclua as operações antes de encerrar.|Finish operations before closing.|Finalice las operaciones antes de cerrar.
 Rota inexistente.|Route not found.|Ruta no encontrada.
 Caminho inválido.|Invalid path.|Ruta no válida.
 Arquivo inexistente.|File not found.|Archivo no encontrado.
 Ação não permitida.|Action not allowed.|Acción no permitida.
-Pacote fora do catálogo.|Package not in catalog.|Paquete fuera del catálogo.
 Cole uma resposta com até 100 mil caracteres.|Paste a response of up to 100,000 characters.|Pegue una respuesta de hasta 100.000 caracteres.
 Tente abrir o aplicativo novamente.|Try opening the app again.|Intente abrir la aplicación de nuevo.
 Idioma|Language|Idioma
@@ -38,7 +43,6 @@ Principal|Main navigation|Navegación principal
 SEU COMPUTADOR|YOUR COMPUTER|SU EQUIPO
 Visão geral|Overview|Vista general
 Diagnóstico e reparos|Diagnostics and repairs|Diagnóstico y reparaciones
-Laboratório Windows|Windows lab|Laboratorio Windows
 Ecossistema Vimaka|Vimaka ecosystem|Ecosistema Vimaka
 Histórico|History|Historial
 Apoie o desenvolvedor|Support the developer|Apoye al desarrollador
@@ -74,30 +78,12 @@ Resolva com contexto.|Solve with context.|Resuelva con contexto.
 Problemas recorrentes documentados pela Microsoft. Cada ação tem um escopo claro.|Common problems documented by Microsoft. Each action has a clear scope.|Problemas frecuentes documentados por Microsoft. Cada acción tiene un alcance claro.
 Sem desativar antivírus, atualizações ou serviços essenciais.|Without disabling antivirus, updates or essential services.|Sin desactivar el antivirus, las actualizaciones ni servicios esenciales.
 Referência: solucionadores de problemas do Windows ↗|Reference: Windows troubleshooters ↗|Referencia: solucionadores de problemas de Windows ↗
-LABORATÓRIO WINDOWS|WINDOWS LAB|LABORATORIO WINDOWS
 Um espaço para experimentar.|A space to experiment.|Un espacio para experimentar.
-Execute roteiros em uma instalação descartável do Windows, separada do sistema principal.|Run scripts in a disposable Windows installation, separate from the main system.|Ejecute scripts en una instalación desechable de Windows, separada del sistema principal.
-Verificando disponibilidade|Checking availability|Comprobando disponibilidad
 1. Prepare o ambiente|1. Prepare the environment|1. Prepare el entorno
-Windows Sandbox requer edição Pro, Enterprise ou Education compatível, virtualização e recursos disponíveis.|Windows Sandbox requires a compatible Pro, Enterprise or Education edition, virtualization and available resources.|Windows Sandbox requiere una edición Pro, Enterprise o Education compatible, virtualización y recursos disponibles.
-Habilitar Windows Sandbox|Enable Windows Sandbox|Habilitar Windows Sandbox
 O Windows pode pedir reinicialização. Este aplicativo nunca reinicia o computador automaticamente.|Windows may require a restart. This app never restarts the computer automatically.|Windows puede requerir un reinicio. Esta aplicación nunca reinicia el equipo automáticamente.
-2. Baixe um pacote|2. Download a package|2. Descargue un paquete
-Os instaladores são baixados pelo WinGet e copiados para a sandbox. Nada é instalado na máquina principal.|Installers are downloaded by WinGet and copied to the sandbox. Nothing is installed on the main computer.|WinGet descarga los instaladores y los copia al entorno aislado. No se instala nada en el equipo principal.
-Pacote|Package|Paquete
 Baixar para testes|Download for testing|Descargar para pruebas
-Na sandbox, abra a pasta packages na área de trabalho. Pacotes dependem do WinGet e de suas condições de uso.|In the sandbox, open the packages folder on the desktop. Packages depend on WinGet and its terms of use.|En el entorno aislado, abra la carpeta packages del escritorio. Los paquetes dependen de WinGet y sus condiciones de uso.
-3. Revise o roteiro|3. Review the script|3. Revise el script
-Resposta do chat ou script PowerShell|Chat response or PowerShell script|Respuesta del chat o script PowerShell
-Cole aqui a resposta do Cérebro Brasil. Blocos PowerShell serão extraídos para revisão.|Paste the Cérebro Brasil response here. PowerShell blocks will be extracted for review.|Pegue aquí la respuesta de Cérebro Brasil. Se extraerán los bloques PowerShell para revisión.
-Preparar revisão|Prepare review|Preparar revisión
-Comandos que serão executados|Commands to be executed|Comandos que se ejecutarán
-Permitir rede na sandbox (também permite acesso à rede local)|Allow networking in the sandbox (also allows local network access)|Permitir red en el entorno aislado (también permite acceso a la red local)
-Revisar e abrir na sandbox|Review and open in sandbox|Revisar y abrir en el entorno aislado
-Sem acesso de escrita às pastas compartilhadas, câmera, microfone ou área de transferência. O resultado fica na sandbox e é perdido ao fechá-la. Isso não prova que um programa é seguro no computador principal.|No write access to shared folders, camera, microphone or clipboard. Results stay in the sandbox and are lost when it closes. This does not prove a program is safe on the main computer.|Sin escritura en carpetas compartidas, cámara, micrófono ni portapapeles. El resultado se pierde al cerrar el entorno aislado. Esto no demuestra que un programa sea seguro en el equipo principal.
 ASSISTENTE BRASILEIRO|BRAZILIAN ASSISTANT|ASISTENTE BRASILEÑO
 Cérebro Brasil, ao seu lado.|Cérebro Brasil, by your side.|Cérebro Brasil, a su lado.
-Converse sobre o problema e traga a resposta para o laboratório.|Discuss the problem and bring the response to the lab.|Converse sobre el problema y lleve la respuesta al laboratorio.
 Do diagnóstico|From diagnostics|Del diagnóstico
 ao próximo teste.|to the next test.|a la siguiente prueba.
 O site abre em uma janela própria. A sessão de chat permanece no Cérebro Brasil.|The site opens in its own window. The chat session stays in Cérebro Brasil.|El sitio se abre en una ventana propia. La sesión de chat permanece en Cérebro Brasil.
@@ -105,10 +91,7 @@ Abrir Cérebro Brasil ↗|Open Cérebro Brasil ↗|Abrir Cérebro Brasil ↗
 O site impede incorporação em outras páginas. O aplicativo não lê conversas privadas automaticamente.|The site blocks embedding in other pages. The app does not automatically read private conversations.|El sitio impide su incorporación en otras páginas. La aplicación no lee conversaciones privadas automáticamente.
 Traga a resposta com você|Bring the response with you|Traiga la respuesta
 Explique o problema no Cérebro Brasil.|Explain the problem in Cérebro Brasil.|Explique el problema en Cérebro Brasil.
-Peça um roteiro PowerShell para testar no Windows Sandbox.|Ask for a PowerShell script to test in Windows Sandbox.|Pida un script PowerShell para probar en Windows Sandbox.
-Copie a resposta e cole no laboratório.|Copy the response and paste it into the lab.|Copie la respuesta y péguela en el laboratorio.
 Revise todos os comandos antes de executar.|Review all commands before running them.|Revise todos los comandos antes de ejecutarlos.
-Importar resposta no laboratório →|Import response into the lab →|Importar respuesta al laboratorio →
 Não envie senhas, tokens ou dados pessoais junto com o diagnóstico.|Do not send passwords, tokens or personal data with diagnostics.|No envíe contraseñas, tokens ni datos personales junto con el diagnóstico.
 ECOSSISTEMA VIMAKA|VIMAKA ECOSYSTEM|ECOSISTEMA VIMAKA
 27 soluções. Um ponto de partida.|27 solutions. One starting point.|27 soluciones. Un punto de partida.
@@ -147,7 +130,6 @@ Confira o nome do recebedor no seu banco antes de confirmar. Este aplicativo nã
 Quer encomendar um software Windows?|Want to commission Windows software?|¿Quiere encargar un software para Windows?
 Fale com a Vimaka sobre seu projeto.|Talk to Vimaka about your project.|Hable con Vimaka sobre su proyecto.
 Encerrar componente local|Stop local component|Detener componente local
-REVISÃO DA AÇÃO|ACTION REVIEW|REVISIÓN DE LA ACCIÓN
 Cancelar|Cancel|Cancelar
 Confirmar execução|Confirm execution|Confirmar ejecución
 O Windows solicitará autorização de administrador.|Windows will request administrator approval.|Windows solicitará autorización de administrador.
@@ -156,12 +138,9 @@ INICIALIZAÇÃO|STARTUP|INICIO
 entradas|entries|entradas
 Programas registrados para iniciar com o Windows|Programs registered to start with Windows|Programas registrados para iniciarse con Windows
 MEMÓRIA LIVRE|FREE MEMORY|MEMORIA LIBRE
-Reinício pendente|Restart pending|Reinicio pendiente
 Disponível|Available|Disponible
 Não instalado|Not installed|No instalado
 Habilitado. Reinicie quando for conveniente.|Enabled. Restart when convenient.|Habilitado. Reinicie cuando le convenga.
-Abra um teste isolado no laboratório|Open an isolated test in the lab|Abra una prueba aislada en el laboratorio
-Prepare o recurso no laboratório|Set up the feature in the lab|Prepare la función en el laboratorio
 Entradas de inicialização|Startup entries|Entradas de inicio
 Memória livre (GB)|Free memory (GB)|Memoria libre (GB)
 Serviços Remojo|Remojo services|Servicios Remojo
@@ -179,9 +158,6 @@ Conexão de rede|Network connection|Conexión de red
 Consulte o diagnóstico de rede para verificar os adaptadores.|Use network diagnostics to check adapters.|Consulte el diagnóstico de red para revisar los adaptadores.
 Referência honesta|Honest baseline|Referencia honesta
 A comparação registra configurações e leituras. Não há medição controlada de aceleração.|The comparison records settings and readings. There is no controlled measurement of speed improvement.|La comparación registra configuraciones y lecturas. No hay una medición controlada de aceleración.
-Habilitado · reinicie para concluir|Enabled · restart to finish|Habilitado · reinicie para terminar
-Recurso presente · abertura ainda precisa ser validada|Feature present · launch still needs validation|Función presente · falta validar su apertura
-Recurso não instalado|Feature not installed|Función no instalada
 Administrador|Administrator|Administrador
 Ferramenta local|Local tool|Herramienta local
 Ver ação →|Review action →|Ver acción →
@@ -195,9 +171,6 @@ Ação iniciada. Acompanhe o histórico.|Action started. Follow its progress in 
 Lendo o estado do computador…|Reading computer status…|Leyendo el estado del equipo…
 Atualize o diagnóstico primeiro.|Refresh diagnostics first.|Actualice el diagnóstico primero.
 Nenhum dos padrões verificados foi encontrado. Isso não é uma análise de segurança completa.|None of the checked patterns were found. This is not a complete security analysis.|No se encontró ninguno de los patrones comprobados. Esto no es un análisis de seguridad completo.
-Prepare o roteiro para revisão.|Prepare the script for review.|Prepare el script para revisión.
-Executar somente no Windows Sandbox|Run only in Windows Sandbox|Ejecutar solo en Windows Sandbox
-O WinGet baixará o instalador e verificará o hash do catálogo. Nada será instalado no Windows principal. Revise eventuais acordos de origem no WinGet.|WinGet will download the installer and verify its catalog hash. Nothing will be installed on the main Windows system. Review any source agreements in WinGet.|WinGet descargará el instalador y verificará el hash del catálogo. No se instalará nada en el Windows principal. Revise los acuerdos de origen en WinGet.
 Cérebro Brasil aberto em uma janela própria.|Cérebro Brasil opened in its own window.|Cérebro Brasil se abrió en una ventana propia.
 Conclua as operações em andamento. Para voltar, abra o atalho Vimaka Windows Care.|Finish any running operations. To return, open the Vimaka Windows Care shortcut.|Finalice las operaciones en curso. Para volver, abra el acceso directo de Vimaka Windows Care.
 Componente encerrado. Abra o atalho para reconectar.|Component stopped. Open the shortcut to reconnect.|Componente detenido. Abra el acceso directo para reconectar.
@@ -232,7 +205,6 @@ Muda o plano de energia e salva o plano anterior. Pode aumentar calor e consumo.
 Restaurar plano anterior|Restore previous plan|Restaurar plan anterior
 Restaura o plano salvo pelo botão Alto desempenho deste aplicativo.|Restores the plan saved by this app's High performance button.|Restaura el plan guardado por el botón Alto rendimiento de esta aplicación.
 Habilita o recurso oficial de isolamento do Windows. Requer edição compatível e virtualização; pode exigir reinicialização, que não será automática.|Enables the official Windows isolation feature. Requires a compatible edition and virtualization; may require a restart, which will not be automatic.|Habilita la función oficial de aislamiento de Windows. Requiere una edición compatible y virtualización; puede requerir un reinicio, que no será automático.
-O texto contém acesso à rede. A sandbox está sem rede por padrão.|The text includes network access. Sandbox networking is off by default.|El texto incluye acceso a la red. La red está desactivada por defecto en el entorno aislado.
 O texto contém exclusão ou alteração de discos.|The text includes disk deletion or modification.|El texto incluye eliminación o modificación de discos.
 O texto contém alteração de proteção de segurança.|The text includes changes to security protection.|El texto incluye cambios en la protección de seguridad.
 O texto contém execução indireta ou codificada.|The text includes indirect or encoded execution.|El texto incluye ejecución indirecta o codificada.
