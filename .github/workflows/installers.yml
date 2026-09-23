@@ -22,14 +22,16 @@ jobs:
         shell: powershell
         run: |
           $setup=(Get-ChildItem app/build-ci/*.exe).FullName
-          $run=Start-Process -FilePath $setup -ArgumentList '--accept-install','--background' -PassThru -Wait -WindowStyle Hidden
+          $run=Start-Process -FilePath $setup -ArgumentList '--accept-install','--background' -PassThru -WindowStyle Hidden
+          if(!$run.WaitForExit(90000)){Get-Content (Join-Path $env:TEMP 'Vimaka-install-error.txt') -ErrorAction SilentlyContinue;throw 'Installer timed out'}
           if($run.ExitCode -ne 0){throw 'Install failed'}
           $session=Invoke-RestMethod http://127.0.0.1:47831/api/session
           if($session.version -ne '0.3.0'){throw 'Wrong version'}
           $root=Join-Path $env:LOCALAPPDATA 'VimakaWindowsCare'
           $sentinel=Join-Path $root 'data/install-test.txt'
           Set-Content -LiteralPath $sentinel -Value 'preserve'
-          $run=Start-Process -FilePath $setup -ArgumentList '--accept-install','--background' -PassThru -Wait -WindowStyle Hidden
+          $run=Start-Process -FilePath $setup -ArgumentList '--accept-install','--background' -PassThru -WindowStyle Hidden
+          if(!$run.WaitForExit(90000)){Get-Content (Join-Path $env:TEMP 'Vimaka-install-error.txt') -ErrorAction SilentlyContinue;throw 'Installer timed out'}
           if($run.ExitCode -ne 0){throw 'Update failed'}
           if(!(Test-Path -LiteralPath $sentinel)){throw 'User data lost'}
           $session=Invoke-RestMethod http://127.0.0.1:47831/api/session
