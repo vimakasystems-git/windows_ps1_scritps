@@ -1,6 +1,8 @@
 param([string]$NodePath,[ValidatePattern('^build(?:-[a-z0-9]+)?$')][string]$BuildDirectory='build')
 $ErrorActionPreference='Stop'
 $project=$PSScriptRoot
+$version=(Get-Content -LiteralPath (Join-Path $project 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json).version
+if($version -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$'){throw 'Versao invalida em package.json.'}
 $build=Join-Path $project $BuildDirectory
 $payload=Join-Path $build 'payload'
 if(Test-Path $build){throw 'A pasta build ja existe. Preserve ou mova a compilacao anterior antes de gerar outra.'}
@@ -18,7 +20,7 @@ if($LASTEXITCODE -ne 0){throw 'Compilacao do launcher falhou.'}
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $zip=Join-Path $build 'payload.zip'
 [IO.Compression.ZipFile]::CreateFromDirectory($payload,$zip,[IO.Compression.CompressionLevel]::Optimal,$false)
-$setup=Join-Path $build 'VimakaWindowsCare-Setup.exe'
+$setup=Join-Path $build ('VimakaWindowsCare-Setup-'+$version+'.exe')
 & $csc /nologo /target:winexe @refs "/win32icon:$(Join-Path $project 'public\app.ico')" "/resource:$zip,payload.zip" "/out:$setup" (Join-Path $project 'Launcher.cs') (Join-Path $project 'InstallSupport.cs')
 if($LASTEXITCODE -ne 0){throw 'Compilacao do instalador falhou.'}
 Get-FileHash $setup -Algorithm SHA256 | Format-List

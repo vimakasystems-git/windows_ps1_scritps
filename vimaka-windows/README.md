@@ -4,7 +4,7 @@ Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois,
 
 ## Instalar e abrir
 
-Execute `build/VimakaWindowsCare-Setup.exe`. Instala por usuario em `%LOCALAPPDATA%\VimakaWindowsCare\app`, cria atalhos na area de trabalho/menu Iniciar e registra inicializacao automatica do componente local, sem elevacao. Nenhum tuning ou reparo e executado na instalacao.
+Execute `build/VimakaWindowsCare-Setup-0.1.6.exe`. O nome inclui automaticamente a versao de `package.json` nas proximas compilacoes. Instala por usuario em `%LOCALAPPDATA%\VimakaWindowsCare\app`, cria atalhos na area de trabalho/menu Iniciar e registra inicializacao automatica do componente local, sem elevacao. Nenhum tuning ou reparo e executado na instalacao.
 
 O executavel abre uma janela do Edge em `http://127.0.0.1:47831`. A interface tambem pode ser instalada como PWA pelo navegador. A PWA precisa do componente local para diagnosticar e executar ferramentas; o cache offline inclui apenas a interface, nunca os diagnosticos. O instalador e o launcher desta versao nao possuem assinatura digital de distribuicao. Nao contorne bloqueios de seguranca do Windows; para distribuicao ampla, assine e valide os binarios em maquinas limpas.
 
