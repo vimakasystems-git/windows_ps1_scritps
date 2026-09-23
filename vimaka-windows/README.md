@@ -1,10 +1,10 @@
-# Vimaka Windows Care 0.1.6
+# Vimaka Windows Care 0.1.7
 
 Aplicativo local para Windows: painel PWA, diagnostico, comparacao antes/depois, ferramentas de reparo do Windows. Versao de avaliacao; nao e uma garantia de ganho de desempenho .
 
 ## Instalar e abrir
 
-Execute `build/VimakaWindowsCare-Setup-0.1.6.exe`. O nome inclui automaticamente a versao de `package.json` nas proximas compilacoes. Instala por usuario em `%LOCALAPPDATA%\VimakaWindowsCare\app`, cria atalhos na area de trabalho/menu Iniciar e registra inicializacao automatica do componente local, sem elevacao. Nenhum tuning ou reparo e executado na instalacao.
+Execute `build/VimakaWindowsCare-Setup-0.1.7.exe`. O nome inclui automaticamente a versao de `package.json` nas proximas compilacoes. Instala por usuario em `%LOCALAPPDATA%\VimakaWindowsCare\app`, cria atalhos na area de trabalho/menu Iniciar e registra inicializacao automatica do componente local, sem elevacao. Nenhum tuning ou reparo e executado na instalacao.
 
 O executavel abre uma janela do Edge em `http://127.0.0.1:47831`. A interface tambem pode ser instalada como PWA pelo navegador. A PWA precisa do componente local para diagnosticar e executar ferramentas; o cache offline inclui apenas a interface, nunca os diagnosticos. O instalador e o launcher desta versao nao possuem assinatura digital de distribuicao. Nao contorne bloqueios de seguranca do Windows; para distribuicao ampla, assine e valide os binarios em maquinas limpas.
 
@@ -31,7 +31,7 @@ Ferramentas: diagnostico de rede, DISM CheckHealth, DISM RestoreHealth seguido d
 
 Abre o site em uma janela propria para consultar orientacoes. O aplicativo nao le conversas privadas nem importa ou executa comandos do chat. Use as ferramentas fixas de diagnostico e reparo apos revisar sua descricao.
 
-O laboratorio, a execucao de scripts e o download de pacotes foram retirados deste produto na versao 0.1.6. Historicos e arquivos anteriores sao preservados; o recurso opcional Windows Sandbox ja habilitado no sistema nao e alterado por esta atualizacao.
+O laboratorio, a execucao de scripts e o download de pacotes foram retirados deste produto na versao 0.1.4. Historicos e arquivos anteriores sao preservados; o recurso opcional Windows Sandbox ja habilitado no sistema nao e alterado por esta atualizacao.
 
 ## Seguranca e privacidade
 

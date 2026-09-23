@@ -273,4 +273,4 @@ O texto contém execução indireta ou codificada.|The text includes indirect or
 Vimaka · Antes e depois|Vimaka · Before and after|Vimaka · Antes y después
 Leituras em momentos diferentes não constituem benchmark. Não é possível afirmar aumento de velocidade com estes dados.|Readings at different times are not a benchmark. These data do not establish a speed improvement.|Las lecturas en momentos distintos no son una prueba de rendimiento. Estos datos no demuestran una mejora de velocidad.
 Relatório local. Revise antes de compartilhar.|Local report. Review before sharing.|Informe local. Revise antes de compartir.
-`.trim().split('\n').map(line=>line.split('|'));
+`.trim().split('\n').map(line=>line.trim()).filter(Boolean).map(line=>line.split('|'));
