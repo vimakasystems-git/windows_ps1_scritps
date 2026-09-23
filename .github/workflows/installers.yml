@@ -2,6 +2,7 @@ name: Workstation Care installers
 on:
   push:
     branches: [main]
+    paths: ['app/**', 'platforms/windows/**', 'platforms/linux/**', 'platforms/macos/**', 'platforms/build-installers.py', '.github/workflows/installers.yml']
   workflow_dispatch:
 permissions:
   contents: read
