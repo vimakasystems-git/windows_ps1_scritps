@@ -4,10 +4,10 @@ import {rankScore} from '../public/benchmark-ranking.js';
 test('benchmark independente apenas mede e gera relatorio',()=>{
  assert.deepEqual(makeSteps('benchmark').map(x=>x.id),['benchmark','report']);
 });
-test('fluxo automatico nao abre configuracoes nem desfaz energia no final',()=>{
- const ids=makeSteps('performance').map(s=>s.id);
- for(const manual of ['storage','startup','updates','audio','printers','reliability','restoreEnergy'])assert.ok(!ids.includes(manual));
- assert.equal(ids[0],'before');assert.ok(ids.indexOf('after')>ids.indexOf('energy'));assert.throws(()=>makeSteps('__proto__'));
+test('medicao nao altera configuracoes; antigo ajuste em lote foi removido',()=>{
+ const ids=makeSteps('measurement').map(s=>s.id);
+ for(const mutation of ['energy','dns','repair','storage','startup','updates','restoreEnergy'])assert.ok(!ids.includes(mutation));
+ assert.equal(ids[0],'before');assert.ok(ids.indexOf('after')>ids.indexOf('before'));assert.throws(()=>makeSteps('performance'));assert.throws(()=>makeSteps('__proto__'));
 });
 test('falha e etapa ignorada nunca recebem check de sucesso; fila continua',async()=>{
  const job={steps:[{id:'fail'},{id:'skip'},{id:'ok'}]};const progress=[];

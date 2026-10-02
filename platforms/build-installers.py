@@ -26,7 +26,7 @@ else:
     bundle = stage / 'Applications/Vimaka Workstation Care.app'
     dest = bundle / 'Contents/Resources/app'
 dest.mkdir(parents=True)
-for name in ['server.mjs', 'platform.mjs', 'core.mjs', 'benchmark.mjs', 'workflow.mjs',
+for name in ['server.mjs', 'care-policy.mjs', 'drivers.mjs', 'diagnosis.mjs', 'repair-catalog.mjs', 'repair-engine.mjs', 'phase1-server.mjs', 'platform.mjs', 'core.mjs', 'benchmark.mjs', 'workflow.mjs',
              'storage.mjs', 'report-state.mjs', 'updates.mjs', 'stop-local.mjs',
              'desktop-launcher.mjs', 'package.json', 'THIRD-PARTY-NOTICES.txt']:
     shutil.copyfile(app / name, dest / name)
