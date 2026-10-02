@@ -1,0 +1,40 @@
+import {features} from './plans.js';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let api,notice,refresh,state={},fingerprint='';
+const labels={confirmed:'Ocorrência confirmada',hypothesis:'Hipótese',preventive:'Revisão preventiva',information:'Informação',unavailable:'Indisponível'};
+const status={proposed:'Proposto',authorized:'Autorizado',preparing:'Preparando',executing:'Executando',validating:'Validando',completed:'Concluído — confira a evidência',failed:'Falhou',awaiting_restart:'Aguardando reinício',awaiting_verification:'Aguardando verificação',reverted:'Revertido',recovery_needed:'Recuperação precisa de revisão',cancelled:'Cancelado'};
+async function call(route,data){try{const result=await api(route,data);await refresh();return result;}catch(e){notice(e.message,true);return null;}}
+async function authorize(action,params={}){
+ const proposed=await call('repairs/propose',{action,params});if(!proposed)return;
+ const {operation,procedure:p}=proposed;const d=$('procedure-confirm');
+ $('procedure-title').textContent=p.title;
+ $('procedure-detail').innerHTML=`<p>${esc(p.impact)}</p><p><strong>Backup:</strong> ${esc(p.backup)}</p><p><strong>Validação:</strong> ${esc(p.success)}</p><p><strong>Limitações:</strong> ${esc(p.limitations)}</p><p>${esc(p.cancel)} ${esc(p.restart)}</p><p>${p.admin?'O Windows solicitará autorização administrativa.':'Procedimento da conta atual.'}</p>`;
+ $('procedure-backup-label').hidden=action!=='integrityRepair';$('procedure-backup').checked=false;d.returnValue='cancel';d.showModal();
+ const ok=await new Promise(resolve=>d.addEventListener('close',()=>resolve(d.returnValue==='ok'),{once:true}));
+ if(!ok){await call('repairs/cancel',{id:operation.id});return;}
+ if(action==='integrityRepair'&&!$('procedure-backup').checked){await call('repairs/cancel',{id:operation.id});return notice('Backup pessoal precisa ser confirmado antes do reparo.',true);}
+ if(await call('repairs/run',{id:operation.id,confirm:true,backupConfirmed:$('procedure-backup').checked}))notice('Procedimento iniciado. Acompanhe o progresso e o diário.');
+}
+export function setupPhase1(deps){({api,notice,refresh}=deps);
+ $('symptom-route').onclick=async()=>{const result=await call('symptoms',{text:$('symptom-text').value});if(result)$('symptom-result').textContent=result.method+' Sugestões: '+result.journeys.map(j=>state.diagnosis?.journeys?.[j]||({startup:'Inicialização',update:'Windows Update',apps:'Aplicativos',network:'Rede',integrity:'Integridade'})[j]).join(', ')+'. '+result.note;};
+ $('diagnosis-collect').onclick=async()=>{const probe=$('diagnosis-network').checked;if(await call('diagnosis/collect',{extended:$('diagnosis-extended').checked,probeNetwork:probe,networkConsent:probe}))notice('Coletando evidências locais. Nenhum reparo será executado nesta coleta.');};
+ $('journey-findings').onclick=async e=>{const b=e.target.closest('[data-procedure]');if(!b)return;const action=b.dataset.procedure;const name=action==='startupDisable'?$('startup-choice')?.value:undefined;if(action==='startupDisable'&&!name)return notice('Selecione uma entrada de inicialização.',true);b.disabled=true;try{await authorize(action,name?{name}:{});}finally{b.disabled=false;}};
+ $('repair-journal').onclick=async e=>{const b=e.target.closest('button');if(!b)return;const id=b.dataset.restore||b.dataset.cancel||b.dataset.review;if(!id)return;b.disabled=true;try{
+  if(b.dataset.restore)await authorize('startupRestore',{sourceId:id});
+  if(b.dataset.cancel)await call('repairs/cancel',{id});
+  if(b.dataset.review){const row=b.closest('details');const note=row.querySelector('textarea').value;const resolved=row.querySelector('select').value==='yes';if(await call('repairs/review',{id,note,resolved,confirm:true}))notice('Revalidação humana registrada, com as evidências automáticas preservadas.');}
+ }finally{b.disabled=false;}};
+ $('plans-comparison').innerHTML=['free','paid'].map(plan=>`<article class="panel"><h2>${plan==='free'?'Gratuito':'Pacote completo · R$ 19,99'}</h2>${plan==='paid'?'<p>Por computador. Inclui também os recursos gratuitos.</p>':''}<ul>${features.filter(f=>f.plan===plan).map(f=>`<li>${esc(f.name)}</li>`).join('')}</ul></article>`).join('');
+}
+export function renderPhase1(next){state=next;if(!api)return;
+ const busy=state.jobs?.some(j=>j.status==='running');$('diagnosis-collect').disabled=busy||state.platform!=='win32';$('diagnosis-extended').disabled=!state.entitlements?.paid;
+ if(!state.entitlements?.paid)$('diagnosis-extended').checked=false;
+ $('plan-status').textContent=state.entitlements?.paid?'Pacote completo ativo neste computador.':'Modo gratuito ativo. Reparos elegíveis e recuperação não dependem de compra.';
+ const diagnosis=state.diagnosis,ops=state.repairOperations||[];const stamp=JSON.stringify([diagnosis?.id,ops.map(o=>[o.id,o.updatedAt]),state.entitlements?.paid]);if(stamp===fingerprint)return;fingerprint=stamp;
+ $('diagnosis-summary').textContent=diagnosis?`Coleta: ${new Date(diagnosis.at).toLocaleString('pt-BR')} · ${diagnosis.findings.length} achados · ${diagnosis.raw.collector?.elapsedMs??'—'} ms de coleta. Dados indisponíveis não são classificados como defeitos.`:'Colete evidências para investigar inicialização, Windows Update, aplicativos, rede e integridade.';
+ const startup=diagnosis?.raw.startup?.data?.filter(x=>!x.protected)||[];
+ $('journey-findings').innerHTML=diagnosis?Object.entries(diagnosis.journeys).map(([id,name])=>`<article class="panel"><h2>${esc(name)}</h2>${id==='startup'&&startup.length?`<label for="startup-choice">Entrada para revisão individual</label><select id="startup-choice"><option value="">Selecione o aplicativo</option>${startup.map(x=>`<option value="${esc(x.name)}">${esc(x.name)}</option>`).join('')}</select>`:''}${diagnosis.findings.filter(f=>f.category===id).map(f=>`<details class="finding"><summary><span class="tag">${esc(labels[f.kind])}</span> <strong>${esc(f.title)}</strong></summary><ul>${f.evidence.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p>${esc(f.hypothesis)}</p><p>Confiança: ${esc(f.confidence)}</p><p>Próximos testes: ${f.tests.map(esc).join(' ')}</p>${f.actions.map(a=>`<button data-procedure="${esc(a)}">${esc(state.procedures[a].title)}</button>`).join('')}</details>`).join('')||'<p>Nenhum achado disponível nesta coleta.</p>'}</article>`).join(''):'';
+ $('diagnosis-timeline').innerHTML=diagnosis?.timeline?.length?`<ol>${diagnosis.timeline.map(e=>`<li>${esc(e.at)} · ${esc(e.provider)} · ${esc(e.id)} ${esc(e.application||'')}</li>`).join('')}</ol>`:'Disponível após coleta ampliada com o pacote completo. As evidências básicas continuam gratuitas.';
+ $('repair-journal').innerHTML=ops.length?ops.map(op=>`<details class="job"><summary><strong>${esc(state.procedures[op.action]?.title||op.action)}</strong> · ${esc(status[op.state]||op.state)} · ${esc(new Date(op.at).toLocaleString('pt-BR'))}</summary><p>${esc(op.transitions.at(-1)?.note)}</p><p>${esc(op.result?.detail||'')}</p>${op.params.name?`<p>Entrada: ${esc(op.params.name)}</p>`:''}<ol>${op.transitions.map(t=>`<li>${esc(t.at)} · ${esc(status[t.state]||t.state)} · ${esc(t.note)}</li>`).join('')}</ol>${op.state==='proposed'?`<button data-cancel="${op.id}">Cancelar proposta</button>`:''}${op.action==='startupDisable'&&['completed','awaiting_verification','awaiting_restart','recovery_needed'].includes(op.state)?`<button data-restore="${op.id}">Revisar reversão gratuita</button>`:''}${['awaiting_verification','awaiting_restart','recovery_needed','completed','reverted'].includes(op.state)?`<label>Resultado ao repetir o sintoma<select><option value="no">Ainda não resolvido</option><option value="yes">Resolvido no meu teste</option></select></label><label>Como você testou?<textarea rows="2" maxlength="500" placeholder="Descreva o teste e o resultado"></textarea></label><button data-review="${op.id}">Registrar minha verificação</button>`:''}${op.humanValidation?`<p>Declaração do usuário: ${esc(op.humanValidation.note)}</p>`:''}</details>`).join(''):'Nenhum procedimento proposto.';
+}

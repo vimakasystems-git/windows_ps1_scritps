@@ -13,7 +13,7 @@ export async function renderDrivers(state){
  const value=await api('drivers/state'),scan=value.scan;
  const next=(scan?.at||'')+JSON.stringify(value.packages.map(p=>p.id));if(next===fingerprint)return;fingerprint=next;
  $('drivers-sources').replaceChildren();$('drivers-vendor').replaceChildren();
- for(const [id,v] of Object.entries(value.manufacturers)){option($('drivers-vendor'),id,v.name);const a=document.createElement('a');a.href=v.portal;a.textContent=v.name+' — site oficial';a.target='_blank';a.rel='noopener noreferrer';$('drivers-sources').append(a,document.createTextNode(' · '));}
+ for(const [id,v] of Object.entries(value.manufacturers)){if(v.hosts.length)option($('drivers-vendor'),id,v.name);const a=document.createElement('a');a.href=v.portal;a.textContent=v.name+(v.hosts.length?' — portal e instalador assistido':' — atendimento pelo portal oficial');a.title=v.note||'';a.target='_blank';a.rel='noopener noreferrer';$('drivers-sources').append(a,document.createTextNode(' · '));}
  $('drivers-device').replaceChildren();for(const d of scan?.devices||[])option($('drivers-device'),d.DeviceID,(d.DeviceName||d.DeviceID)+' · '+(d.DriverVersion||'versão indisponível'));
  $('drivers-package').replaceChildren();for(const p of value.packages)option($('drivers-package'),p.id,p.deviceName+' · '+p.vendor+' · assinatura conferida');
  $('drivers-summary').textContent=scan?`${scan.devices.length} drivers inventariados; ${scan.problems.length} dispositivos com falhas; ${scan.offeredUpdates.length} ofertas de atualização. Consulta: ${scan.updateSearch==='complete'?'concluída':scan.updateSearch==='partial'?'parcial':'indisponível'}.`:'Execute o diagnóstico para verificar versões e ofertas de atualização.';

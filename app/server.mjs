@@ -1,3 +1,4 @@
+import {createPhase1} from './phase1-server.mjs';
 import {manufacturers,officialDriverURL,requireDriverSelection,requireDriverVendor,downloadOfficialDriver} from './drivers.mjs';
 import {termsVersion,requireConsent,verifyLicense,professionalReport,shareSummary} from './care-policy.mjs';
 import {createUpdater} from './updates.mjs';
@@ -12,8 +13,8 @@ import crypto from 'node:crypto';
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {actions as windowsActions,safeAction as windowsSafeAction} from './core.mjs';
-const actions=isWindows?windowsActions:portableActions;
-function safeAction(id){if(isWindows)return windowsSafeAction(id);if(!Object.hasOwn(actions,id))throw Error('Action unavailable on this OS.');return actions[id];}
+const actions=isWindows?Object.fromEntries(Object.entries(windowsActions).filter(([id])=>!['energy','dns','health','repair'].includes(id))):portableActions;
+function safeAction(id){if(!Object.hasOwn(actions,id))throw Error('Ação fora do catálogo. Use Diagnóstico por problema.');if(isWindows)return windowsSafeAction(id);if(!Object.hasOwn(actions,id))throw Error('Action unavailable on this OS.');return actions[id];}
 import {benchmark} from './benchmark.mjs';
 import {makeSteps,executeSteps} from './workflow.mjs';
 const here=path.dirname(fileURLToPath(import.meta.url));
@@ -67,9 +68,10 @@ async function executeAction(id,job){
  let failure;
  try{await runPS('Invoke-Action.ps1',['-Action',id,'-ResultFile',file],undefined);}catch(e){failure=e;}finally{clearInterval(timer);}
  const result=await jsonRead(file,null);if(!result)throw Error('Nenhum resultado recebido.');
- job.log=(prefix+(result.output||'')).slice(-150000);if(!result.ok)throw Error(result.error||'Ação falhou.');if(failure)throw failure;
+ job.hasWarnings=action.manual===true;job.log=(prefix+(result.output||'')).slice(-150000);if(!result.ok)throw Error(result.error||'Ação falhou.');if(failure)throw failure;
 }
 function workflow(mode){
+ if(mode==='performance')throw Error('Use Diagnóstico por problema e escolha uma ação elegível. Ajustes em lote foram removidos.');
  if(!isWindows&&mode==='performance')throw Error('Automated tuning is currently Windows-only. Use diagnostics or benchmark.');
  const steps=makeSteps(mode);
  return newJob(mode==='performance'?'Melhorar desempenho':mode==='benchmark'?'Benchmark local':'Diagnóstico completo',async job=>{
@@ -81,7 +83,7 @@ function workflow(mode){
     const metric=await benchmark(data);if(step.id==='benchmarkBefore')job.benchmarkBefore=metric;else job.benchmarkAfter=metric;
    }else if(step.id==='report'){
     const comparison=await jsonRead(path.join(data,'comparison.json'),{});
-    if(mode==='performance'&&job.before&&job.after){comparison.before=job.before;comparison.current=job.after;comparison.notes='Comparação desta execução. Variações de carga e temperatura afetam as leituras.';}
+    if(mode==='measurement'&&job.before&&job.after){comparison.before=job.before;comparison.current=job.after;comparison.notes='Comparação desta execução. Variações de carga e temperatura afetam as leituras.';}
     comparison.benchmarkBefore=mode==='benchmark'?(comparison.benchmarkAfter||null):(job.benchmarkBefore||null);comparison.benchmarkAfter=job.benchmarkAfter||null;comparison.reportJob=job.id;recordReport(comparison,job);
     await fs.writeFile(path.join(data,'comparison.json'),JSON.stringify(comparison,null,2));
     await fs.mkdir(path.join(data,'reports'),{recursive:true});await fs.writeFile(path.join(data,'reports',job.id+'.json'),JSON.stringify({jobId:job.id,mode,comparison},null,2));
@@ -93,6 +95,7 @@ function workflow(mode){
   },persist);
  });
 }
+const phase1=await createPhase1({data,isWindows,runPS,newJob,jsonRead,licensed,consent:()=>requireConsent(consent),body,send});
 const server=http.createServer(async(req,res)=>{
   res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','no-referrer');res.setHeader('X-Frame-Options','DENY');
   res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
@@ -105,6 +108,8 @@ const server=http.createServer(async(req,res)=>{
     if(url.pathname.startsWith('/api/')&&req.method!=='GET'){
       if(req.headers.origin!==origin||req.headers['x-vimaka-token']!==csrf||!req.headers['content-type']?.startsWith('application/json'))return send(res,403,{error:'Sessão local inválida. Reabra o aplicativo.'});
     }
+    if(await phase1.handle(req,res,url))return;
+    if(req.method==='POST'&&['/api/drivers/install','/api/drivers/configure','/api/care/content','/api/action','/api/update/open'].includes(url.pathname))phase1.guardMutation();
     if(req.method==='GET'&&url.pathname==='/api/drivers/state')return send(res,200,{scan:await jsonRead(path.join(data,'drivers.json'),null),manufacturers,packages:await jsonRead(path.join(data,'driver-packages.json'),[])});
     if(req.method==='POST'&&url.pathname==='/api/drivers/scan'){
       requireConsent(consent);if(!isWindows)throw Error('Serviço de drivers disponível no Windows.');const b=await body(req);if(b.confirm!==true)throw Error('Autorize consultar atualizações online.');
@@ -122,10 +127,10 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==='POST'&&url.pathname==='/api/care/consent'){const b=await body(req);requireConsent({...b,version:termsVersion});consent={terms:true,license:true,version:termsVersion,at:new Date().toISOString()};await fs.writeFile(path.join(data,'consent.json'),JSON.stringify(consent));return send(res,200,{ok:true});}
     if(req.method==='POST'&&url.pathname==='/api/care/activate'){requireConsent(consent);const b=await body(req);if(!verifyLicense(b.token,commerce.licensePublicKey,installation))throw Error('Licença inválida, expirada ou emissão comercial ainda indisponível.');licenseToken=b.token;await fs.writeFile(path.join(data,'license.json'),JSON.stringify(licenseToken));return send(res,200,{ok:true});}
     if(req.method==='POST'&&url.pathname==='/api/care/analysis'){
-      requireConsent(consent);if(!licensed())throw Error('Análise avançada requer licença ativa.');
+      requireConsent(consent);phase1.requireFeature('advancedAnalysis');
       return send(res,202,newJob('Análise avançada',async job=>{job.steps=[{id:'inventory',title:'Inventário de hardware',status:'pending'},{id:'advanced',title:'Discos, drivers, atualizações e eventos',status:'pending'},{id:'programs',title:'Aplicativos e armazenamento',status:'pending'},{id:'benchmark',title:'Microbenchmark local',status:'pending'},{id:'save',title:'Documentar evidências',status:'pending'}];job.progress=0;let advanced={};await executeSteps(job,async step=>{if(step.id==='inventory')await snapshot();if(step.id==='advanced')advanced=isWindows?JSON.parse((await runPS('AdvancedCollect.ps1',[],undefined,120000)).replace(/^\uFEFF/,'')):{limitations:['Diagnóstico avançado de drivers e eventos disponível no Windows.']};if(step.id==='programs'){storageInfo=undefined;await getStorageInfo();}if(step.id==='benchmark')advanced.benchmark=await benchmark(data);if(step.id==='save')await fs.writeFile(path.join(data,'advanced.json'),JSON.stringify(advanced,null,2));},persist);}));
     }
-    if(req.method==='POST'&&url.pathname==='/api/care/report'){requireConsent(consent);const b=await body(req),claim=licensed();if(!claim)throw Error('Relatório avançado requer licença ativa.');if(!['advanced','technician'].includes(b.profile))throw Error('Perfil não autorizado pela licença.');const report=professionalReport(await jsonRead(path.join(data,'comparison.json'),{}),await getStorageInfo(),[...jobs.values()],b.profile);report.drivers=await jsonRead(path.join(data,'drivers.json'),{limitations:['Diagnóstico de drivers ainda não executado.']});report.advancedDiagnostics=await jsonRead(path.join(data,'advanced.json'),{limitations:['Execute a análise avançada para obter dados adicionais.']});return send(res,200,report);}
+    if(req.method==='POST'&&url.pathname==='/api/care/report'){requireConsent(consent);const b=await body(req),claim=licensed();if(!claim)throw Error('Relatório avançado requer licença ativa.');if(!['advanced','technician'].includes(b.profile))throw Error('Perfil não autorizado pela licença.');const report=professionalReport(await jsonRead(path.join(data,'comparison.json'),{}),await getStorageInfo(),[...jobs.values()],b.profile);report.drivers=await jsonRead(path.join(data,'drivers.json'),{limitations:['Diagnóstico de drivers ainda não executado.']});report.problemDiagnosis=await jsonRead(path.join(data,'diagnosis.json'),null);report.repairJournal=(await phase1.state()).repairOperations;report.advancedDiagnostics=await jsonRead(path.join(data,'advanced.json'),{limitations:['Execute a análise avançada para obter dados adicionais.']});return send(res,200,report);}
     if(req.method==='GET'&&url.pathname==='/api/care/share'){requireConsent(consent);return send(res,200,{text:shareSummary(await jsonRead(path.join(data,'comparison.json'),{}))});}
     if(req.method==='POST'&&url.pathname==='/api/care/content'){
       requireConsent(consent);const b=await body(req);if(!isWindows)throw Error('Controle de conteúdo disponível no Windows.');if(b.confirm!==true||!Array.isArray(b.categories)||b.categories.some(c=>!['dangerous','adult','bets'].includes(c)))throw Error('Seleção ou consentimento inválido.');
@@ -136,7 +141,7 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==='POST'&&url.pathname==='/api/update/download'){const b=await body(req);if(b.confirm!==true)throw Error('Confirme o download.');return send(res,202,newJob('Atualização',async job=>{job.kind='update';await updater.download(job);}));}
     if(req.method==='POST'&&url.pathname==='/api/update/open'){const b=await body(req);if(b.confirm!==true||[...jobs.values()].some(j=>j.status==='running'))throw Error('Conclua as operações antes de instalar.');return send(res,200,await updater.open(b.id));}
     if(req.method==='GET'&&url.pathname==='/api/state'){
-      return send(res,200,{comparison:await jsonRead(path.join(data,'comparison.json'),{}),platform:process.platform,systemName,storage:await jsonRead(path.join(data,'storage.json'),null),actions,jobs:[...jobs.values()].reverse().slice(0,100)});
+      return send(res,200,{...await phase1.state(),comparison:await jsonRead(path.join(data,'comparison.json'),{}),platform:process.platform,systemName,storage:await jsonRead(path.join(data,'storage.json'),null),actions,jobs:[...jobs.values()].reverse().slice(0,100)});
     }
 
     if(req.method==='GET'&&url.pathname==='/api/storage/options'){const info=await getStorageInfo();return send(res,200,{roots:[{id:'profile',label:'Meus arquivos'},...info.roots]});}

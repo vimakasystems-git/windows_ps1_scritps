@@ -28,11 +28,18 @@ test('API local bloqueia origens externas, ações arbitrárias e endpoints remo
   assert.equal((await post('scan',{})).status,400);
   assert.equal((await post('care/consent',{terms:true,license:false})).status,400);
   assert.equal((await post('care/consent',{terms:true,license:true})).status,200);
+  for(const id of ['energy','dns','health','repair'])assert.equal((await post('action',{id,confirm:true})).status,400);
+  assert.equal((await post('workflow',{mode:'performance',confirm:true})).status,400);
+  assert.equal((await post('diagnosis/collect',{extended:true})).status,400);
+  assert.equal((await post('diagnosis/collect',{probeNetwork:true,networkConsent:false})).status,400);
+  assert.equal((await post('repairs/propose',{action:'arbitrary',params:{}})).status,400);
+  const symptoms=await post('symptoms',{text:'Internet cai com VPN'});assert.equal(symptoms.status,200);assert.deepEqual((await symptoms.json()).journeys,['network']);
   assert.equal((await post('care/report',{profile:'technician'})).status,400);
   for(const route of ['drivers/download','drivers/install','drivers/configure']){const response=await post(route,{confirm:true});assert.equal(response.status,400);assert.match((await response.json()).error,/pago|paga/);}
   assert.equal((await post('drivers/scan',{confirm:false})).status,400);
   assert.equal((await post('care/content',{categories:['injected'],confirm:true})).status,400);
   const state=await(await fetch(base+'/api/state')).json();assert.equal(state.jobs.length,0);assert.equal(state.actions.sandboxEnable,undefined);assert.equal(state.packages,undefined);assert.equal(state.sandboxPresent,undefined);
+  assert.equal(state.entitlements.paid,false);assert.equal(state.entitlements.features.find(f=>f.id==='recovery').plan,'free');assert.equal(state.actions.energy,undefined);assert.deepEqual(state.repairOperations,[]);
   assert.equal((await fetch(base+'/%2e%2e%5cserver.mjs')).status,403);
  }finally{server.kill();/* Temp contains no private data. Retained for diagnostics. */}
 });

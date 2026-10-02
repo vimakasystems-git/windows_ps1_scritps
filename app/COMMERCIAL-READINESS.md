@@ -26,7 +26,7 @@ Desativado por padrão. O usuário seleciona malware/phishing, pornografia e/ou 
 
 ## Publicação
 
-Esta alteração não muda a versão comercial nem publica release. Antes de disponibilizar instalador final: completar condições comerciais, revisar a minuta, preservar a chave privada de emissão e validar instalação/recusa, elevação, bloqueio/reversão e relatório licenciado em máquina virtual. Não foram executados reparos nem bloqueios na máquina de desenvolvimento.
+A versão 0.4.0-preview.1 identifica a prévia de desenvolvimento e não publica release. Antes de disponibilizar instalador final: completar condições comerciais, revisar a minuta, preservar a chave privada de emissão e validar instalação/recusa, elevação, bloqueio/reversão e relatório licenciado em máquina virtual. Não foram executados reparos nem bloqueios na máquina de desenvolvimento.
 
 ## Drivers oficiais — implementação assistida
 
@@ -39,3 +39,7 @@ Instalação exige licença válida e consentimento separado. A assinatura e o h
 Referências: https://learn.microsoft.com/en-us/windows/win32/api/wuapi/nf-wuapi-iupdatesearcher-search ; https://www.intel.com/content/www/us/en/support/detect.html ; https://www.nvidia.com/en-us/drivers/ ; https://www.amd.com/en/support/download/drivers.html ; https://www.dell.com/support/home/en-us?app=drivers .
 
 A chave pública é distribuída no pacote. A chave privada de emissão fica exclusivamente em outputs/Vimaka-license-private.pem neste workspace e não é enviada ao GitHub ou aos instaladores. Preserve-a e restrinja o acesso. Pix não é confirmado automaticamente.
+
+## Atualização de diagnóstico e planos
+
+Consulte `docs/REQUISITOS-MATRIZ.md` para a separação gratuita/paga, cinco jornadas, recuperação e compatibilidade. O catálogo agora contém Positivo, ASUS, Acer, MSI, Gigabyte, Samsung, Huawei, Dynabook/Toshiba e LG como portais oficiais; não implica importação ou instalação automática dessas marcas.

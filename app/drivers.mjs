@@ -7,10 +7,19 @@ export const manufacturers={
  amd:{name:'AMD',portal:'https://www.amd.com/en/support/download/drivers.html',hosts:['drivers.amd.com'],signer:'Advanced Micro Devices'},
  dell:{name:'Dell',portal:'https://www.dell.com/support/home/en-us?app=drivers',hosts:['dl.dell.com','downloads.dell.com'],signer:'Dell'},
  hp:{name:'HP',portal:'https://support.hp.com/us-en/drivers',hosts:['ftp.hp.com'],signer:'HP'},
- lenovo:{name:'Lenovo',portal:'https://pcsupport.lenovo.com/us/en/',hosts:['download.lenovo.com'],signer:'Lenovo'}
+ lenovo:{name:'Lenovo',portal:'https://pcsupport.lenovo.com/us/en/',hosts:['download.lenovo.com'],signer:'Lenovo'},
+ positivo:{name:'Positivo',portal:'https://www.meupositivo.com.br/para-voce/suporte-tecnico/drivers',hosts:[],note:'Informe o número de série no portal oficial. Download e instalação pelo fabricante; importação automática ainda indisponível.'},
+ asus:{name:'ASUS',portal:'https://www.asus.com/support/download-center',hosts:[],note:'Selecione modelo e Windows no portal oficial; pacotes ZIP e utilitários OEM seguem o assistente do fabricante.'},
+ acer:{name:'Acer',portal:'https://www.acer.com/gb-en/support/drivers-and-manuals',hosts:[],note:'Consulte modelo ou SNID no portal. Instalação pelo pacote oficial do equipamento.'},
+ msi:{name:'MSI',portal:'https://www.msi.com/support/download',hosts:[],note:'Selecione o modelo ou use MSI Center oficial. Importação automática ainda indisponível.'},
+ gigabyte:{name:'Gigabyte',portal:'https://www.gigabyte.com/Support/Consumer/Download',hosts:[],note:'Confira modelo e revisão do hardware no portal oficial.'},
+ samsung:{name:'Samsung',portal:'https://www.samsung.com/us/support/downloads/',hosts:[],note:'Selecione o modelo do Galaxy Book/PC e siga a ferramenta oficial.'},
+ huawei:{name:'Huawei',portal:'https://consumer.huawei.com/cn/support/driver-list/',hosts:[],note:'Portal oficial por modelo/região; pode exigir PC Manager oficial. Importação automática ainda indisponível.'},
+ dynabook:{name:'Dynabook / Toshiba',portal:'https://support.dynabook.com/drivers',hosts:[],note:'Confira modelo, região e sistema operacional no suporte oficial.'},
+ lg:{name:'LG',portal:'https://www.lg.com/us/support/software-firmware-drivers',hosts:[],note:'Selecione o modelo/região para obter o pacote oficial. Importação automática ainda indisponível.'}
 };
 export function officialDriverURL(value,vendor){
- const v=manufacturers[vendor];if(!v)throw Error('Fabricante não suportado para download assistido.');
+ const v=manufacturers[vendor];if(!v)throw Error('Fabricante não suportado para download assistido.');if(!v.hosts.length)throw Error('Este fabricante usa o fluxo do portal oficial indicado. Importação automática de pacotes ainda indisponível.');
  const url=new URL(value);if(url.protocol!=='https:'||url.username||url.password||url.port||!v.hosts.includes(url.hostname.toLowerCase())||!/\.exe$/i.test(url.pathname))throw Error('Use o link HTTPS de um instalador EXE no domínio oficial de download do fabricante selecionado.');
  return url;
 }
