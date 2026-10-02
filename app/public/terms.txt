@@ -1,0 +1,20 @@
+VIMAKA WORKSTATION CARE — TERMOS DE USO E LICENÇA
+Versão 2026-10-02.1
+
+1. Licença. A Vimaka Sistemas Inteligentes autoriza o uso dos recursos gratuitos deste aplicativo. Recursos comerciais dependem de oferta e licença próprias, com preço, prazo, abrangência, suporte e validade técnica informados antes da compra. Bibliotecas de terceiros conservam suas respectivas licenças. O aceite não transfere a propriedade intelectual.
+
+2. Finalidade e limites. O aplicativo coleta informações locais, mede desempenho e oferece ajustes e reparos do sistema operacional. Resultados dependem de hardware, carga, temperatura e condições do sistema. Não há promessa de aceleração, recuperação de dados, correção de defeitos físicos ou eliminação de todas as ameaças.
+
+3. Autorização. O usuário declara ter autorização para administrar o computador. Aceitar estes termos não executa reparos: cada operação que altera o sistema exige revisão e confirmação específicas, além de autorização administrativa quando necessária. Mantenha backup atualizado. Equipamentos com sinais de falha física devem ser examinados por técnico antes de testes intensivos ou reparos.
+
+4. Defeitos preexistentes e responsabilidade. Defeitos físicos ou lógicos preexistentes, desgaste, falhas de energia e causas externas podem provocar interrupções, perda de dados ou danos durante o uso. A Vimaka não assume responsabilidade por danos decorrentes exclusivamente dessas causas, quando não relacionados a defeito do software ou conduta imputável à fornecedora, nos limites permitidos pela legislação. Esta cláusula não exclui direitos do consumidor nem responsabilidade legal por vícios, defeitos do serviço ou conduta da Vimaka.
+
+5. Privacidade. Inventários, caminhos, programas instalados e logs ficam localmente. O usuário decide exportar ou compartilhar; relatórios técnicos podem conter dados pessoais e devem ser revisados antes de entrega a terceiros. A função social oferece resumo sem nomes, caminhos e números de série. Atualizações consultam o GitHub. Nenhuma publicação social ou pagamento é feito automaticamente.
+
+6. Controle de conteúdo. Desativado inicialmente. Categorias e domínios são escolhidos pelo usuário com autorização sobre a máquina. A aplicação exige consentimento específico, pode afetar todos os usuários e é reversível. Listas são limitadas: não garantem bloqueio de toda pornografia, apostas ou ameaças, não substituem antivírus e podem ser contornadas por VPN, endereços IP e outros mecanismos. Não há inspeção de histórico ou conteúdo da navegação.
+
+7. Redes sociais. Seguir a Vimaka e compartilhar resultados são ações voluntárias. O aplicativo não solicita senhas nem verifica seguidores. As plataformas aplicam seus próprios termos.
+
+8. Comercial e suporte. Pix não ativa licença automaticamente. Aquisição, confirmação do pagamento e emissão de licença ocorrem pelos canais oficiais, após oferta completa. Contato: vimakasystems@gmail.com. Aplicam-se os direitos legais de informação, suporte, arrependimento e reparação quando cabíveis.
+
+9. Aceite. O aplicativo registra localmente a versão dos termos e a data do aceite. Alterações de versão exigem novo aceite. A desinstalação encerra o uso; exportações permanecem sob controle do usuário.

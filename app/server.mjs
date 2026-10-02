@@ -1,3 +1,4 @@
+import {termsVersion,requireConsent,verifyLicense,professionalReport,shareSummary} from './care-policy.mjs';
 import {createUpdater} from './updates.mjs';
 import {isWindows,systemName,dataDirectory,portableActions,portableSnapshot,portableStorage,portableNetwork} from './platform.mjs';
 import {recordReport} from './report-state.mjs';
@@ -26,6 +27,12 @@ const appVersion=JSON.parse(await fs.readFile(path.join(here,'package.json'),'ut
 const updater=createUpdater({current:appVersion,data});
 const jobs=new Map(), csrf=crypto.randomBytes(32).toString('hex');
 const jsonRead=async(file,fallback)=>{try{return JSON.parse((await fs.readFile(file,'utf8')).replace(/^\uFEFF/,''));}catch{return fallback;}};
+let consent=await jsonRead(path.join(data,'consent.json'),null);
+let installation=await jsonRead(path.join(data,'installation.json'),null);
+if(!installation){installation=crypto.randomUUID();await fs.writeFile(path.join(data,'installation.json'),JSON.stringify(installation));}
+const commerce=await jsonRead(path.join(here,'public','commerce.json'),{});
+let licenseToken=await jsonRead(path.join(data,'license.json'),'');
+function licensed(){return verifyLicense(licenseToken,commerce.licensePublicKey,installation);}
 async function persist(){await fs.writeFile(path.join(data,'history.json'),JSON.stringify([...jobs.values()].slice(-100),null,2));}
 for(const job of await jsonRead(path.join(data,'history.json'),[])){if(job.status==='running'){job.status='interrupted';job.finishedAt=new Date().toISOString();job.currentStep='Interrompido';for(const step of job.steps||[]){if(['running','pending'].includes(step.status))step.status='interrupted';}job.log+='\nAplicativo reiniciado; resultado anterior não confirmado.';}jobs.set(job.id,job);}
 function processRun(file,args,job,timeout=1800000){return new Promise((resolve,reject)=>{
@@ -97,6 +104,20 @@ const server=http.createServer(async(req,res)=>{
     if(url.pathname.startsWith('/api/')&&req.method!=='GET'){
       if(req.headers.origin!==origin||req.headers['x-vimaka-token']!==csrf||!req.headers['content-type']?.startsWith('application/json'))return send(res,403,{error:'Sessão local inválida. Reabra o aplicativo.'});
     }
+    if(req.method==='GET'&&url.pathname==='/api/care/status')return send(res,200,{version:termsVersion,accepted:consent?.version===termsVersion&&consent.terms&&consent.license,installation,license:licensed()});
+    if(req.method==='POST'&&url.pathname==='/api/care/consent'){const b=await body(req);requireConsent({...b,version:termsVersion});consent={terms:true,license:true,version:termsVersion,at:new Date().toISOString()};await fs.writeFile(path.join(data,'consent.json'),JSON.stringify(consent));return send(res,200,{ok:true});}
+    if(req.method==='POST'&&url.pathname==='/api/care/activate'){requireConsent(consent);const b=await body(req);if(!verifyLicense(b.token,commerce.licensePublicKey,installation))throw Error('Licença inválida, expirada ou emissão comercial ainda indisponível.');licenseToken=b.token;await fs.writeFile(path.join(data,'license.json'),JSON.stringify(licenseToken));return send(res,200,{ok:true});}
+    if(req.method==='POST'&&url.pathname==='/api/care/analysis'){
+      requireConsent(consent);if(!licensed())throw Error('Análise avançada requer licença ativa.');
+      return send(res,202,newJob('Análise avançada',async job=>{job.steps=[{id:'inventory',title:'Inventário de hardware',status:'pending'},{id:'advanced',title:'Discos, drivers, atualizações e eventos',status:'pending'},{id:'programs',title:'Aplicativos e armazenamento',status:'pending'},{id:'benchmark',title:'Microbenchmark local',status:'pending'},{id:'save',title:'Documentar evidências',status:'pending'}];job.progress=0;let advanced={};await executeSteps(job,async step=>{if(step.id==='inventory')await snapshot();if(step.id==='advanced')advanced=isWindows?JSON.parse((await runPS('AdvancedCollect.ps1',[],undefined,120000)).replace(/^\uFEFF/,'')):{limitations:['Diagnóstico avançado de drivers e eventos disponível no Windows.']};if(step.id==='programs'){storageInfo=undefined;await getStorageInfo();}if(step.id==='benchmark')advanced.benchmark=await benchmark(data);if(step.id==='save')await fs.writeFile(path.join(data,'advanced.json'),JSON.stringify(advanced,null,2));},persist);}));
+    }
+    if(req.method==='POST'&&url.pathname==='/api/care/report'){requireConsent(consent);const b=await body(req),claim=licensed();if(!claim)throw Error('Relatório avançado requer licença ativa.');if(!['advanced','technician'].includes(b.profile)||b.profile==='technician'&&claim.plan!=='technician')throw Error('Perfil não autorizado pela licença.');const report=professionalReport(await jsonRead(path.join(data,'comparison.json'),{}),await getStorageInfo(),[...jobs.values()],b.profile);report.advancedDiagnostics=await jsonRead(path.join(data,'advanced.json'),{limitations:['Execute a análise avançada para obter dados adicionais.']});return send(res,200,report);}
+    if(req.method==='GET'&&url.pathname==='/api/care/share'){requireConsent(consent);return send(res,200,{text:shareSummary(await jsonRead(path.join(data,'comparison.json'),{}))});}
+    if(req.method==='POST'&&url.pathname==='/api/care/content'){
+      requireConsent(consent);const b=await body(req);if(!isWindows)throw Error('Controle de conteúdo disponível no Windows.');if(b.confirm!==true||!Array.isArray(b.categories)||b.categories.some(c=>!['dangerous','adult','bets'].includes(c)))throw Error('Seleção ou consentimento inválido.');
+      return send(res,202,newJob('Controle de conteúdo',async job=>{job.currentStep='Aguardando autorização do Windows e atualização da lista';const resultFile=path.join(data,crypto.randomUUID()+'.content.json');await runPS('ContentControl.ps1',['-Mode',b.categories.length?'apply':'restore','-Categories',b.categories.join(',')||'none','-ResultFile',resultFile],job);const result=await jsonRead(resultFile,null);if(!result?.ok)throw Error(result?.error||'Bloqueio não confirmado.');await fs.writeFile(path.join(data,'content-control.json'),JSON.stringify({...result,at:new Date().toISOString()}));job.progress=100;job.log=JSON.stringify(result);}));
+    }
+    if(req.method==='POST'&&['/api/scan','/api/workflow','/api/action','/api/storage/scan'].includes(url.pathname))requireConsent(consent);
     if(req.method==='GET'&&url.pathname==='/api/update/check')return send(res,200,await updater.check());
     if(req.method==='POST'&&url.pathname==='/api/update/download'){const b=await body(req);if(b.confirm!==true)throw Error('Confirme o download.');return send(res,202,newJob('Atualização',async job=>{job.kind='update';await updater.download(job);}));}
     if(req.method==='POST'&&url.pathname==='/api/update/open'){const b=await body(req);if(b.confirm!==true||[...jobs.values()].some(j=>j.status==='running'))throw Error('Conclua as operações antes de instalar.');return send(res,200,await updater.open(b.id));}

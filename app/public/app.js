@@ -1,3 +1,4 @@
+import {setupCare,renderCare} from './care-features.js';
 import {setupUpdate,renderUpdate} from './update.js';
 import {renderResultsDashboard} from './result-dashboard.js';
 import {setupVisual,renderVisual} from './visual-dashboard.js';
@@ -15,6 +16,7 @@ function showPage(name){if(!Object.hasOwn(pageNames,name))name='overview';docume
 document.querySelectorAll('[data-page],[data-go]').forEach(b=>b.onclick=()=>showPage(b.dataset.page||b.dataset.go));
 function confirmAction(title,detail,admin=false){$('confirm-title').textContent=title;$('confirm-detail').textContent=detail;$('confirm-admin').textContent=admin?'Esta ação exige administrador. O Windows solicitará autorização ou login de uma conta administradora. Se você não possui essas credenciais, cancele e procure o administrador da máquina.':'A execução ficará registrada no histórico local.';const d=$('confirm');d.returnValue='cancel';d.showModal();return new Promise(resolve=>d.addEventListener('close',()=>resolve(d.returnValue==='ok'),{once:true}));}
 function render(){
+ renderCare(state);
  renderUpdate(state);
  if(state.platform&&state.platform!=='win32'){
   document.title='Vimaka Workstation Care';
@@ -58,7 +60,7 @@ $('search').oninput=ecosystem;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;});
 $('install').onclick=async()=>{if(installPrompt){await installPrompt.prompt();installPrompt=null;}else notice('No Edge ou Chrome, abra o menu do navegador e escolha “Instalar este site como aplicativo”. O executável também abre a interface em janela de app.');};
 window.addEventListener('hashchange',()=>showPage(location.hash.slice(1)||'overview'));
-async function boot(){try{csrf=(await api('session')).csrf;solutions=await(await fetch('/solutions.json')).json();ecosystem();await refresh();showPage(location.hash.slice(1)||'overview');if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});setInterval(()=>{refresh();},2500);}catch(e){notice(e.message,true);}}
+async function boot(){try{csrf=(await api('session')).csrf;await setupCare({api,notice});solutions=await(await fetch('/solutions.json')).json();ecosystem();await refresh();showPage(location.hash.slice(1)||'overview');if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});setInterval(()=>{refresh();},2500);}catch(e){notice(e.message,true);}}
 boot();
 if(document.modelContext?.registerTool){document.modelContext.registerTool({name:'read_windows_comparison',description:'Lê a comparação local já exibida, sem iniciar diagnósticos ou alterações.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:input=>{if(!input||Array.isArray(input)||Object.keys(input).length)throw Error('Esta consulta não aceita parâmetros.');return {comparison:state.comparison||{},connected:!!csrf};}});}
 

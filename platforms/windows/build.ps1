@@ -10,7 +10,7 @@ New-Item $payload -ItemType Directory -Force | Out-Null
 $node=if($NodePath){$NodePath}else{(Get-Command node.exe -ErrorAction Stop).Source}
 $signature=Get-AuthenticodeSignature $node
 if($signature.Status -ne 'Valid'){throw 'O runtime Node local precisa ter assinatura Authenticode valida.'}
-foreach($name in @('server.mjs','core.mjs','workflow.mjs','benchmark.mjs','storage.mjs','platform.mjs','updates.mjs','report-state.mjs','package.json','public','README.md','THIRD-PARTY-NOTICES.txt')){Copy-Item -LiteralPath (Join-Path $project $name) -Destination $payload -Recurse}
+foreach($name in @('server.mjs','care-policy.mjs','core.mjs','workflow.mjs','benchmark.mjs','storage.mjs','platform.mjs','updates.mjs','report-state.mjs','package.json','public','README.md','THIRD-PARTY-NOTICES.txt')){Copy-Item -LiteralPath (Join-Path $project $name) -Destination $payload -Recurse}
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'native') -Destination $payload -Recurse
 Copy-Item -LiteralPath $node -Destination (Join-Path $payload 'node.exe')
 $csc=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'

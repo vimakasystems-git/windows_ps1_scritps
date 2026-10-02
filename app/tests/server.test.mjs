@@ -25,6 +25,11 @@ test('API local bloqueia origens externas, ações arbitrárias e endpoints remo
   assert.equal((await post('storage/cancel',{id:'missing'})).status,400);
   for(const route of ['draft','package','sandbox'])assert.equal((await post(route,{id:'git',text:'Write-Output "test"',confirm:true})).status,404);
   assert.equal((await post('action',{id:'sandboxEnable',confirm:true})).status,400);
+  assert.equal((await post('scan',{})).status,400);
+  assert.equal((await post('care/consent',{terms:true,license:false})).status,400);
+  assert.equal((await post('care/consent',{terms:true,license:true})).status,200);
+  assert.equal((await post('care/report',{profile:'technician'})).status,400);
+  assert.equal((await post('care/content',{categories:['injected'],confirm:true})).status,400);
   const state=await(await fetch(base+'/api/state')).json();assert.equal(state.jobs.length,0);assert.equal(state.actions.sandboxEnable,undefined);assert.equal(state.packages,undefined);assert.equal(state.sandboxPresent,undefined);
   assert.equal((await fetch(base+'/%2e%2e%5cserver.mjs')).status,403);
  }finally{server.kill();/* Temp contains no private data. Retained for diagnostics. */}
