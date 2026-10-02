@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-export const termsVersion='2026-10-02.1';
+export const termsVersion='2026-10-02.2';
 export function requireConsent(record){if(record?.version!==termsVersion||record.terms!==true||record.license!==true)throw Error('Leia e aceite os termos e a licença antes de executar.');}
 export function verifyLicense(token,key,installation){
  try{const [payload,signature,...extra]=String(token).split('.');if(extra.length||!key)return null;

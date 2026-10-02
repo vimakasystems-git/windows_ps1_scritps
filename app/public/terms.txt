@@ -1,5 +1,5 @@
 VIMAKA WORKSTATION CARE — TERMOS DE USO E LICENÇA
-Versão 2026-10-02.1
+Versão 2026-10-02.2
 
 1. Licença. A Vimaka Sistemas Inteligentes autoriza o uso dos recursos gratuitos deste aplicativo. Recursos comerciais dependem de oferta e licença próprias, com preço, prazo, abrangência, suporte e validade técnica informados antes da compra. Bibliotecas de terceiros conservam suas respectivas licenças. O aceite não transfere a propriedade intelectual.
 
@@ -18,3 +18,5 @@ Versão 2026-10-02.1
 8. Comercial e suporte. Pix não ativa licença automaticamente. Aquisição, confirmação do pagamento e emissão de licença ocorrem pelos canais oficiais, após oferta completa. Contato: vimakasystems@gmail.com. Aplicam-se os direitos legais de informação, suporte, arrependimento e reparação quando cabíveis.
 
 9. Aceite. O aplicativo registra localmente a versão dos termos e a data do aceite. Alterações de versão exigem novo aceite. A desinstalação encerra o uso; exportações permanecem sob controle do usuário.
+
+10. Pacote completo e drivers. Preço de R$ 19,99 por computador, com relatórios avançados e técnicos e serviço assistido de instalação, configuração e atualização de drivers. O diagnóstico de drivers é gratuito. O preço remunera a licença e o serviço Vimaka, não a revenda de drivers de terceiros. Drivers e assistentes oficiais obedecem às licenças dos fabricantes. A consulta online depende do serviço Windows Update configurado; ofertas ali encontradas não constituem verificação completa do catálogo OEM. Download assistido restrito a fabricantes suportados, origem HTTPS autorizada e assinatura válida do fabricante. O usuário confere hardware, modelo, Windows e arquitetura antes do download, e confirma a execução do assistente oficial. Não são instalados BIOS ou firmware. Não há instalação silenciosa nem reinício automático. Uma oferta precisa informar o prazo de licença, validade técnica e suporte antes da aquisição. O pagamento exige confirmação manual para emissão da licença vinculada ao identificador deste computador.

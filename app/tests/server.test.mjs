@@ -29,6 +29,8 @@ test('API local bloqueia origens externas, ações arbitrárias e endpoints remo
   assert.equal((await post('care/consent',{terms:true,license:false})).status,400);
   assert.equal((await post('care/consent',{terms:true,license:true})).status,200);
   assert.equal((await post('care/report',{profile:'technician'})).status,400);
+  for(const route of ['drivers/download','drivers/install','drivers/configure']){const response=await post(route,{confirm:true});assert.equal(response.status,400);assert.match((await response.json()).error,/pago|paga/);}
+  assert.equal((await post('drivers/scan',{confirm:false})).status,400);
   assert.equal((await post('care/content',{categories:['injected'],confirm:true})).status,400);
   const state=await(await fetch(base+'/api/state')).json();assert.equal(state.jobs.length,0);assert.equal(state.actions.sandboxEnable,undefined);assert.equal(state.packages,undefined);assert.equal(state.sandboxPresent,undefined);
   assert.equal((await fetch(base+'/%2e%2e%5cserver.mjs')).status,403);
