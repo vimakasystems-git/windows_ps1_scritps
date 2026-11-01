@@ -22,20 +22,8 @@ function Native($exe,[string[]]$arguments){
  $native.Output
 }
 function Open-Panel($target,$processName,$extra){
- $existing=@(Get-Process -Name $processName -ErrorAction SilentlyContinue | Where-Object MainWindowHandle -ne 0 | ForEach-Object MainWindowHandle)
  if($extra){Start-Process $target -ArgumentList $extra}else{Start-Process $target}
- $owned=@()
- for($attempt=0;$attempt -lt 10 -and !$owned.Count;$attempt++){
-  Start-Sleep -Milliseconds 500
-  $owned=@(Get-Process -Name $processName -ErrorAction SilentlyContinue | Where-Object {$_.MainWindowHandle -notin $existing -and $_.SessionId -eq (Get-Process -Id $PID).SessionId -and $_.MainWindowHandle -ne 0})
- }
- if($owned.Count){
-  $handles=@{};foreach($window in $owned){$handles[$window.Id]=$window.MainWindowHandle}
-  Start-Sleep -Seconds 10
-  foreach($window in $owned){try{$window.Refresh();if(!$window.HasExited -and $window.MainWindowHandle -eq $handles[$window.Id]){[void]$window.CloseMainWindow()}}catch{}}
-  'Janela aberta pelo app: fechamento solicitado apos 10 segundos.'
- }
- else{'Janela existente ou compartilhada: preservada. Feche manualmente quando terminar.'}
+ 'Tela oficial aberta. Execute somente a alteracao desejada e teste o sintoma; abertura nao comprova reparo.'
 }
 try{
  $result.output=switch($Action){
@@ -59,7 +47,7 @@ try{
   restoreEnergy {
    $save=Join-Path (Split-Path $ResultFile) 'energy-backup.txt'
    $old=(Get-Content $save -Raw).Trim();if($old -notmatch '^[0-9a-fA-F-]{36}$'){throw 'Backup invalido.'}
-   Native "$env:WINDIR\System32\powercfg.exe" @('/setactive',$old);'Plano anterior restaurado.'
+   Native "$env:WINDIR\System32\powercfg.exe" @('/setactive',$old);$active=(& "$env:WINDIR\System32\powercfg.exe" /getactivescheme) -join '';if($LASTEXITCODE -ne 0 -or $active -notmatch [regex]::Escape($old)){throw 'Restauracao do plano nao confirmada.'};'Plano anterior restaurado e conferido.'
   }
  }
  $result.output=$result.output | Out-String;$result.ok=$true

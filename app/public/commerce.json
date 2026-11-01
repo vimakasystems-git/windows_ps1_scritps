@@ -1,0 +1,21 @@
+{
+  "priceLabel": "Pacote completo: R$ 19,99 por computador. Relatórios avançados e técnicos, instalação, configuração e atualização assistidas de drivers oficiais. Diagnóstico de drivers gratuito. Confirmação do Pix e emissão da licença são manuais. Confirme prazo de licença, validade técnica e suporte na oferta antes de pagar.",
+  "pixKey": "+5511945546072",
+  "socialLinks": [
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/vimakasistemas/"
+    },
+    {
+      "label": "TikTok",
+      "url": "https://www.tiktok.com/@vimakasistemas"
+    },
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/vimakasistemas"
+    }
+  ],
+  "licensePublicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAt7a3bZbggA2Rrb/vvNjzhIEIho1LKGIP+ViNqcWrvWo=\n-----END PUBLIC KEY-----\n",
+  "priceCents": 1999,
+  "scope": "computer"
+}

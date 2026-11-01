@@ -17,6 +17,7 @@ test('portable diagnostic generates a measured report and rejects Windows tuning
   const post=(route,body)=>fetch(base+'/api/'+route,{method:'POST',headers:{Origin:base,'Content-Type':'application/json','X-Vimaka-Token':session.csrf},body:JSON.stringify(body)});
   assert.equal((await post('workflow',{mode:'performance',confirm:true})).status,400);
   assert.equal((await post('action',{id:'energy',confirm:true})).status,400);
+  assert.equal((await post('care/consent',{terms:true,license:true})).status,200);
   const response=await post('scan',{});assert.equal(response.status,202);
   const job=await response.json();let state;
   for(let n=0;n<120;n++){

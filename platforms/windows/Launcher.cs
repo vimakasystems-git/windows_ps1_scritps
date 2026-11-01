@@ -30,6 +30,18 @@ class Launcher {
   bool background=Array.IndexOf(args,"--background")>=0;
   using(var payload=Assembly.GetExecutingAssembly().GetManifestResourceStream("payload.zip")){
    if(payload!=null){
+    using(var agreement=new Form()){
+     agreement.Text="Termos de uso e licenca - Vimaka";agreement.Width=720;agreement.Height=620;
+     var text=new TextBox(){Multiline=true,ReadOnly=true,ScrollBars=ScrollBars.Vertical,Dock=DockStyle.Fill};
+     using(var zip=new ZipArchive(payload,ZipArchiveMode.Read,true)){ZipArchiveEntry entry=null;foreach(var candidate in zip.Entries){if(candidate.FullName.Replace('\\','/')=="public/terms.txt"){entry=candidate;break;}}if(entry==null)throw new Exception("Termos ausentes no pacote.");using(var reader=new StreamReader(entry.Open(),Encoding.UTF8))text.Text=reader.ReadToEnd();}
+     payload.Position=0;
+     var panel=new FlowLayoutPanel(){Dock=DockStyle.Bottom,Height=120,FlowDirection=FlowDirection.TopDown};
+     var terms=new CheckBox(){Text="Li e concordo com os termos de uso",AutoSize=true};var license=new CheckBox(){Text="Aceito a licenca de uso do software",AutoSize=true};
+     var accept=new Button(){Text="Aceitar e continuar",AutoSize=true,Enabled=false,DialogResult=DialogResult.OK};
+     terms.CheckedChanged+=(o,e)=>{accept.Enabled=terms.Checked&&license.Checked;};license.CheckedChanged+=(o,e)=>{accept.Enabled=terms.Checked&&license.Checked;};
+     panel.Controls.Add(terms);panel.Controls.Add(license);panel.Controls.Add(new Label(){Text="Reparos exigem consentimento separado. Redes sociais: convite voluntario.",AutoSize=true});panel.Controls.Add(accept);agreement.Controls.Add(text);agreement.Controls.Add(panel);
+     if(agreement.ShowDialog()!=DialogResult.OK)return 0;
+    }
     InstallSupport.ValidateRoot(Root);InstallSupport.ValidateRoot(AppDir);
     Directory.CreateDirectory(Root);
     string stage=Path.Combine(Root,"stage-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(stage);

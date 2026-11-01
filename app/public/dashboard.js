@@ -18,10 +18,7 @@ export function setupDashboard({api,refresh,confirmAction,notice,showPage}){
  let saved;try{saved=Number(localStorage.getItem('vimaka-geekbench7-single'));}catch{}
  if(saved>0)$('geekbench-score').value=saved;showRanking(saved>0?saved:null).catch(e=>notice(e.message,true));
  $('clear-score').onclick=()=>{try{localStorage.removeItem('vimaka-geekbench7-single');}catch{}$('geekbench-score').value='';showRanking(null).catch(e=>notice(e.message,true));};
- $('optimize').onclick=async()=>{try{
-  if(!await confirmAction('Melhorar desempenho','Será feita uma medição antes/depois, diagnóstico de rede, ativação de Alto desempenho, limpeza DNS e verificação/reparo de arquivos. Alto desempenho pode aumentar consumo e calor. Reparos exigem administrador e podem demorar. Com reinício pendente, o reparo será ignorado e sinalizado. Nenhuma tela de configurações será aberta.',true))return;
-  await api('workflow',{mode:'performance',confirm:true});showPage('overview');await refresh();
- }catch(error){notice(error.message,true);}};
+ $('optimize').onclick=()=>{showPage('journeys');notice('Colete evidências e escolha uma ação por vez.');};
  $('export-machine').onclick=()=>{
   if(!currentState.comparison?.current)return notice('Execute o diagnóstico primeiro.',true);
   const title=t('Relatório geral da máquina');
